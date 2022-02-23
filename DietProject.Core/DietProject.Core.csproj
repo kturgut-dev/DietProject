@@ -57,7 +57,9 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Entities\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="ExtensionEF\DietSystem.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
