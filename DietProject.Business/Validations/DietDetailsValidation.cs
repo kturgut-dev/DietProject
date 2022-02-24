@@ -14,13 +14,18 @@ namespace DietProject.Business.Validations
         {
             RuleFor(x => x.CreatedDate)
                 .NotNull().WithMessage("Diyet tarihlerini belirtmeniz gerekmektedir.");
-                
+
             RuleFor(x => x.MealType)
-                .NotEmpty().WithMessage("Hangi öğün olduğunu girmek zorunludur.");
+                .NotEmpty().WithMessage("Hangi öğün olduğunu girmek zorunludur.")
+                .NotNull().WithMessage("Hangi öğün olduğunu girmek zorunludur.")
+                .MinimumLength(3).WithMessage("Öğün en az 3 karakter olmalıdır.");
 
             RuleFor(x => x.Quantity)
-                .NotNull().WithMessage("Birim belirtilmesi gereklidir.");
+                .NotNull().WithMessage("Birim belirtilmesi gereklidir.")
+                .LessThanOrEqualTo(0).WithMessage("Birim miktarı 0'dan büyük olmalıdır.");
 
+            RuleFor(x => x.MeasureUnitId)
+                .NotNull().WithMessage("Birim tipi seçilmesi gereklidir.");
         }
     }
 }

@@ -15,11 +15,11 @@ namespace DietProject.Business.Validations
             RuleFor(x=>x.MessageDate)
                 .NotNull().WithMessage("Tarih alanı boş bırakılamaz.");
 
-            RuleFor(x => x.IsReaded);
+            //RuleFor(x => x.IsReaded);
 
-            RuleFor(x => x.MessageText)
+            RuleFor(x => x.MessageText.Trim())
                 .NotEmpty().WithMessage("Mesaj alanı boş bırakılamaz.")
-                .Length(0).WithMessage("Mesaj yazınız.");
+                .MinimumLength(0).WithMessage("Mesaj yazınız.");
         }
     }
 }

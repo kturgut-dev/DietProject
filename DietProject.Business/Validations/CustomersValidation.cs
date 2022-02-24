@@ -8,24 +8,27 @@ using System.Threading.Tasks;
 
 namespace DietProject.Business.Validations
 {
-
     public class CustomerValidation : AbstractValidator<Customer>
     {
         public CustomerValidation()
         {
             RuleFor(x => x.Weight)
                 .NotNull().WithMessage("Kilo kısmı boş olamaz.")
-                .LessThanOrEqualTo(50).WithMessage("Boyunuzu en az 50 cm olarak seçebilirsiniz.");
+                .LessThanOrEqualTo(25).WithMessage("Kilonuz en az 25 kg olarak seçebilirsiniz.");
 
             RuleFor(x => x.Height)
-                .NotNull().WithMessage("Boy kısmı boş olamaz.");
+                .NotNull().WithMessage("Boy kısmı boş olamaz.")
+                .LessThanOrEqualTo(50).WithMessage("Boyunuz en az 50cm olmalıdır.");
 
             RuleFor(x => x.BirthDate)
                 .NotNull().WithMessage("Doğum tarihi kısmı boş olamaz.")
-                .GreaterThanOrEqualTo(DateTime.Now).WithMessage("Doğum tarihiniz bugünden büyük olamaz.");
+                .GreaterThanOrEqualTo(DateTime.Today.AddYears(-10)).WithMessage("10 yaşından küçük danışanlar kabul edilmemektedir.");
 
             RuleFor(x => x.AllergenicFood)
-               .NotNull().WithMessage("Alerjik besinler kısmı boş olamaz.");
+               .NotEmpty().WithMessage("Alerjik besinler kısmı boş olamaz.")
+               .NotNull().WithMessage("Alerjik besinler kısmı boş olamaz.")
+               .MinimumLength(2).WithMessage("Alerjik besinler kısmı en az 2 karakter olmalıdır.")
+               .MaximumLength(500).WithMessage("Alerjik besinler kısmı en fazla 500 karakter olmalıdır.");
         }
     }
 }

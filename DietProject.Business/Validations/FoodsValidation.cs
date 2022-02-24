@@ -13,14 +13,15 @@ namespace DietProject.Business.Validations
         public FoodsValidation()
         {
             RuleFor(x => x.CreatedBy)
-                .NotEmpty().WithMessage("");
+                .NotEmpty().WithMessage("Kayıt oluşuturan tanımlaması gereklidir.");
 
             RuleFor(x => x.CreatedDate)
                 .NotNull().WithMessage("Tarih alanı boş bırakılamaz.");
 
             RuleFor(x => x.FoodName)
-                .NotNull().WithMessage("Skor belirlemeniz gerekmektedir.")
-                .Length(2).WithMessage("Karakter sayısı 2 den fazla olmalıdır.");
+                .NotEmpty().WithMessage("Yemek adı girmeniz gerekmektedir.")
+                .NotNull().WithMessage("Yemek adı girmeniz gerekmektedir.")
+                .MinimumLength(2).WithMessage("Karakter sayısı 2 den fazla olmalıdır.");
         }
     }
 }

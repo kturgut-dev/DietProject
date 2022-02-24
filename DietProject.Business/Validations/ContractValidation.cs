@@ -15,10 +15,11 @@ namespace DietProject.Business.Validations
         {
             RuleFor(x => x.ContractStartDate)
                     .NotNull().WithMessage("Anlaşma oluştulabilmesi için başlangıç tarihi girmek zorunludur.")
-           .LessThanOrEqualTo(DateTime.Now).WithMessage("Yapılan anlaşma bugünden küçük olamaz");
+                    .LessThanOrEqualTo(DateTime.Today).WithMessage("Yapılan anlaşma bugünden küçük olamaz.");
 
             RuleFor(x => x.ContractEndDate)
-                   .NotNull().WithMessage("Anlaşma oluşturulabilmesi için bitiş tarihi girmek zorunludur.");
+                   .NotNull().WithMessage("Anlaşma oluşturulabilmesi için bitiş tarihi girmek zorunludur.")
+                   .GreaterThan(DateTime.Today.AddMonths(1)).WithMessage("Anlaşma süreleri maximum 1 ay olabilir.");
 
             RuleFor(x => x.ContractPrice)
                   .NotNull().WithMessage("Anlaşma oluşturulabilmesi için ücret belirtmek zorunludur.")

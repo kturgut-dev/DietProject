@@ -15,8 +15,8 @@
     Settings.TemplateType            = TemplateType.Ef6; // EfCore6, EfCore5, EfCore3, EfCore2, Ef6, FileBasedCore2, FileBasedCore3, FileBasedCore5, FileBasedCore6. FileBased specify folder using Settings.TemplateFolder
     Settings.GeneratorType           = GeneratorType.Ef6; // EfCore, Ef6, Custom. Custom edit GeneratorCustom class to provide your own implementation
 
-    Settings.FileManagerType         = FileManagerType.EfCore; // .NET Core project = EfCore; .NET 4.x project = VisualStudio; No output (testing only) = Null
-    Settings.ConnectionString        = "Data Source=.;Initial Catalog=DietSystem;Integrated Security=True;MultipleActiveResultSets=True"; // This is used by the generator to reverse engineer your database
+    Settings.FileManagerType         = FileManagerType.VisualStudio; // .NET Core project = EfCore; .NET 4.x project = VisualStudio; No output (testing only) = Null
+    Settings.ConnectionString        = "Data Source=.\\SQLEXPRESS;Initial Catalog=DietSystem;Integrated Security=True;MultipleActiveResultSets=True"; // This is used by the generator to reverse engineer your database
     Settings.ConnectionStringName    = "DietSystem"; // ConnectionString key as specified in your app.config/web.config/appsettings.json. Not used by the generator, but is placed into the generated DbContext constructor.
     Settings.DbContextName           = "DietSystem"; // Class name for the DbContext to be generated.
     //Settings.DbContextInterfaceName= "IMyDbContext"; // Defaults to "I" + DbContextName or set string empty to not implement any interface.

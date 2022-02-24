@@ -42,11 +42,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExtensionEF\DietSystem.cs">
+    <Compile Include="Entities\BusinessResult.cs" />
+    <Compile Include="Entities\Comments.cs" />
+    <Compile Include="Entities\Error.cs" />
+    <Compile Include="Entities\ErrorTypes.cs" />
+    <None Include="ExtensionEF\DietSystem.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>DietSystem.tt</DependentUpon>
-    </Compile>
+    </None>
+    <Compile Include="Interfaces\IBusinessResult.cs" />
+    <Compile Include="Interfaces\IBusinessManager.cs" />
+    <Compile Include="Interfaces\IError.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -57,9 +64,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Entities\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="ExtensionEF\DietSystem.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

@@ -12,12 +12,13 @@ namespace DietProject.Business.Validations
     {
         public DietitiansValidation()
         {
-            RuleFor(x => x.IsCertificate).NotEmpty();
+            //RuleFor(x => x.IsCertificate).NotEmpty();
 
-            RuleFor(x => x.IsCertificateVerDate).NotEmpty();
+            //RuleFor(x => x.IsCertificateVerDate).NotEmpty();
 
             RuleFor(x => x.CityName)
-                .NotEmpty().WithMessage("Şehir alanı boş bırakılamaz.");
+                .NotEmpty().WithMessage("Şehir alanı boş bırakılamaz.")
+                .MinimumLength(3).WithMessage("Şehir adı en az 3 karakter olamalıdır.");
 
             RuleFor(x => x.MonthlyPrice)
                 .NotNull().WithMessage("Aylık ücret boş bırakılamaz.")
