@@ -14,8 +14,8 @@ namespace DietProject.Business.Validations
         public CommentValidation()
         {
             RuleFor(x => x.Score)
-                .NotEmpty().WithMessage("Skor belirlemeniz gerekmektedir.")
-                .GreaterThanOrEqualTo(0).WithMessage("Skorunuz 0'dan büyük olmalıdır.");
+                .NotNull().WithMessage("Skor belirlemeniz gerekmektedir.")
+                .LessThanOrEqualTo(0).WithMessage("Skorunuz 0'dan büyük olmalıdır.");
 
             RuleFor(x => x.CommentText)
                 .NotEmpty().WithMessage("Yorum girmek zorunludur.");
