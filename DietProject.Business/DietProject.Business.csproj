@@ -46,6 +46,10 @@
     <Compile Include="Validations\CommentValidation.cs" />
     <Compile Include="Validations\CustomersValidation.cs" />
     <Compile Include="Validations\DietDetailsValidation.cs" />
+    <Compile Include="Validations\DietitiansValidation.cs" />
+    <Compile Include="Validations\FoodsValidation.cs" />
+    <Compile Include="Validations\MessagesValidation.cs" />
+    <Compile Include="Validations\UsersValidation.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DietProject.Core\DietProject.Core.csproj">
