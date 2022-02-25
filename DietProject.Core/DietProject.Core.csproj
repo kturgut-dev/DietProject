@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Entities\BusinessResult.cs" />
     <Compile Include="Entities\Comments.cs" />
+    <Compile Include="Entities\Dietitians.cs" />
     <Compile Include="Entities\Error.cs" />
     <Compile Include="Entities\ErrorTypes.cs" />
     <None Include="ExtensionEF\DietSystem.cs">
@@ -51,6 +52,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DietSystem.tt</DependentUpon>
     </None>
+    <Compile Include="Entities\Foods.cs" />
+    <Compile Include="Entities\Messages.cs" />
+    <Compile Include="Entities\Users.cs" />
     <Compile Include="Interfaces\IBusinessResult.cs" />
     <Compile Include="Interfaces\IBusinessManager.cs" />
     <Compile Include="Interfaces\IError.cs" />
