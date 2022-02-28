@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace DietProject.Core.Entities
 {
-    class Contracts
+    public class Contract: BaseEntity
     {
-        public Int64 ID { get; set; }
+     
         public Int64 CustomerID { get; set; }
         public Int64 DietitanID { get; set; }
         public float ContractPrice { get; set; }

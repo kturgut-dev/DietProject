@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace DietProject.Core.Entities
 {
-    public class Users
+    public class User : BaseEntity
     {
-        public Int64 ID { get; set; }
+   
         public string FullName { get; set; }
         public string EPosta { get; set; }
         public bool IsActive { get; set; }

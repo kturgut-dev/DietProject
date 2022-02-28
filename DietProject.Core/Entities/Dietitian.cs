@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace DietProject.Core.Entities
 {
-    public class Dietitians
+    public class Dietitian : BaseEntity
     {
-        public Int64 ID { get; set; }
+    
         public Int64 UserID { get; set; }
         public bool IsCertificate { get; set; }
         public DateTime IsCertificateVerDate { get; set; }

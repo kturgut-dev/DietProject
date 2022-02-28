@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace DietProject.Core.Entities
 {
-    public class Comments
+    public class Comment: BaseEntity
     {
-        public Int64 ID { get; set; }
+       
         public Int64 DietitianID { get; set; }
         public Int64 CustomerID { get; set; }
         public int Score { get; set; }

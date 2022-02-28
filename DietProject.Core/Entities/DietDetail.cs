@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace DietProject.Core.Entities
 {
-    class DietDetails
+    public class DietDetail : BaseEntity
     {
-        public Int64 ID { get; set; }
+       
         public DateTime CreatedDate { get; set; }
         public bool IsCompleted { get; set; }
         public Int64 FoodID { get; set; }

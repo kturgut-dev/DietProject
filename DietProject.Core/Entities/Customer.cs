@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace DietProject.Core.Entities
 {
-    class Customers
+    public class Customer: BaseEntity
     {
-        public Int64 ID { get; set; }
         public Int64 UserID { get; set; }
         public float Weight { get; set; }
         public float Height { get; set; }

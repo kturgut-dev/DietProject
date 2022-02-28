@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace DietProject.Core.Entities
 {
-    public class Messages
+    public class Message : BaseEntity
     {
-        public Int64 ID { get; set; }
+    
         public DateTime MessageDate { get; set; }
         public bool IsReaded { get; set; }
         public string MessageText { get; set; }
