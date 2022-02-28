@@ -44,6 +44,9 @@
   <ItemGroup>
     <Compile Include="Entities\BusinessResult.cs" />
     <Compile Include="Entities\Comments.cs" />
+    <Compile Include="Entities\Contracts.cs" />
+    <Compile Include="Entities\Customers.cs" />
+    <Compile Include="Entities\DietDetails.cs" />
     <Compile Include="Entities\Dietitians.cs" />
     <Compile Include="Entities\Error.cs" />
     <Compile Include="Entities\ErrorTypes.cs" />
