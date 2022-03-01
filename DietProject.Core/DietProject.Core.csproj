@@ -43,6 +43,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataAccess\CommentOperations.cs" />
+    <Compile Include="DataAccess\ContractOperations.cs" />
+    <Compile Include="DataAccess\CustomerOperations.cs" />
+    <Compile Include="DataAccess\DietDetailOperations.cs" />
     <Compile Include="DataAccess\DietitianOperations.cs" />
     <Compile Include="DataAccess\DietProjectContext.cs" />
     <Compile Include="DataAccess\FoodOperations.cs" />
