@@ -43,7 +43,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataAccess\CommentOperations.cs" />
+    <Compile Include="DataAccess\DietitianOperations.cs" />
     <Compile Include="DataAccess\DietProjectContext.cs" />
+    <Compile Include="DataAccess\FoodOperations.cs" />
+    <Compile Include="DataAccess\MessageOperations.cs" />
+    <Compile Include="DataAccess\UserOperations.cs" />
     <Compile Include="Entities\BaseEntity.cs" />
     <Compile Include="Entities\BusinessResult.cs" />
     <Compile Include="Entities\Comment.cs" />
