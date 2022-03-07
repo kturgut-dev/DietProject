@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DietProject.Core", "DietPro
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DietProject.Business", "DietProject.Business\DietProject.Business.csproj", "{EE9745C0-E7E9-4EC3-B9A2-4EC80CFF1306}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DietProject.Web", "DietProject.Web\DietProject.Web.csproj", "{C5E76880-D818-46B5-A1B6-186C741CFA0D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{EE9745C0-E7E9-4EC3-B9A2-4EC80CFF1306}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE9745C0-E7E9-4EC3-B9A2-4EC80CFF1306}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE9745C0-E7E9-4EC3-B9A2-4EC80CFF1306}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5E76880-D818-46B5-A1B6-186C741CFA0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5E76880-D818-46B5-A1B6-186C741CFA0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5E76880-D818-46B5-A1B6-186C741CFA0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5E76880-D818-46B5-A1B6-186C741CFA0D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
