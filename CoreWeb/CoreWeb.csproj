@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    </PropertyGroup>
+  <ItemGroup>
+    <Content Remove="Views\Auth\Login.cshtml" />
+    <Content Remove="Views\Auth\_Login.cshtml" />
+    <Content Remove="Views\Shared\_AuthLayout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Views\Auth\Login.cshtml" />
+    <EmbeddedResource Include="Views\Auth\_Login.cshtml" />
+    <EmbeddedResource Include="Views\Shared\_AuthLayout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="DevExtreme.AspNet.Data" Version="2.8.2" />
+    <PackageReference Include="DevExtreme.AspNet.Core" Version="21.2.5" />
+    <PackageReference Include="BuildBundlerMinifier" Version="2.9.406" />
+    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Business\Business.csproj" />
+    <ProjectReference Include="..\Core\Core.csproj" />
+  </ItemGroup>
+  <ProjectExtensions><VisualStudio><UserProperties TemplateFeatures="NETCORE" /></VisualStudio></ProjectExtensions>
+</Project>

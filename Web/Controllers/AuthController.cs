@@ -10,6 +10,11 @@ namespace DietProject.Web.Controllers
     //https://demos.devexpress.com/ASPNetCore/Demo/Form/CustomizeItem/NetCore/Light/
     public class AuthController : Controller
     {
+        public IActionResult Index()
+        {
+            return RedirectToPage(nameof(Login));
+        }
+
         [Route("Login")]
         public IActionResult Login()
         {
