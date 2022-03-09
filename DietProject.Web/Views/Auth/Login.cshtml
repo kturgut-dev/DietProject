@@ -1,7 +1,6 @@
-﻿@{ 
+﻿@{
     Layout = "~/Views/Shared/_AuthLayout.cshtml";
 }
-
 
 <div class="row g-0">
     <div class="col-lg-6 d-none d-lg-flex justify-content-center align-items-center rounded-lg auth-h100">
@@ -23,7 +22,13 @@
         <div class="w-100 p-3 p-md-5 card border-0 shadow-sm" style="max-width: 32rem;">
             <!-- Form -->
             <form class="row g-1 p-3 p-md-4">
-               @Devexpress
+
+                @(Html.DevExtreme().Form<DietProject.Core.Entities.User>()
+                    .Items(items => {
+                        items.AddSimpleFor(m => m.EPosta);
+                        items.AddSimpleFor(m => m.Password);
+                    })
+                )
             </form>
             <!-- End Form -->
 
