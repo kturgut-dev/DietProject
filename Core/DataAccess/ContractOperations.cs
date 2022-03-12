@@ -11,9 +11,14 @@ namespace DietProject.Core.DataAccess
 {
     public class ContractOperations : IBaseOperations<Contract>
     {
+        private DietProjectContext context;
+        public ContractOperations(DietProjectContext context)
+        {
+            this.context = context;
+        }
         public bool Add(Contract entity)
         {
-            using (DietProjectContext context = new DietProjectContext())
+            using (DietProjectContext context = this.context)
             {
                 try
                 {
@@ -31,7 +36,7 @@ namespace DietProject.Core.DataAccess
 
         public bool Delete(Contract entity)
         {
-            using (DietProjectContext context = new DietProjectContext())
+            using (DietProjectContext context = this.context)
             {
                 try
                 {
@@ -49,7 +54,7 @@ namespace DietProject.Core.DataAccess
 
         public Contract Get(Expression<Func<Contract, bool>> prop)
         {
-            using (DietProjectContext context = new DietProjectContext())
+            using (DietProjectContext context = this.context)
             {
                 try
                 {
@@ -64,7 +69,7 @@ namespace DietProject.Core.DataAccess
 
         public IList<Contract> GetAll(Expression<Func<Contract, bool>> prop)
         {
-            using (DietProjectContext context = new DietProjectContext())
+            using (DietProjectContext context = this.context)
             {
                 try
                 {
@@ -79,7 +84,7 @@ namespace DietProject.Core.DataAccess
 
         public bool Update(Contract entity)
         {
-            using (DietProjectContext context = new DietProjectContext())
+            using (DietProjectContext context = this.context)
             {
                 try
                 {

@@ -11,10 +11,14 @@ namespace DietProject.Core.DataAccess
 {
     public class DietitianOperations : IBaseOperations<Dietitian>
     {
-
+        private DietProjectContext context;
+        public DietitianOperations(DietProjectContext context)
+        {
+            this.context = context;
+        }
         public bool Add(Dietitian entity)
         {
-            using (DietProjectContext context = new DietProjectContext())
+            using (DietProjectContext context = this.context)
             {
                 try
                 {
@@ -32,7 +36,7 @@ namespace DietProject.Core.DataAccess
 
         public bool Delete(Dietitian entity)
         {
-            using (DietProjectContext context = new DietProjectContext())
+            using (DietProjectContext context = this.context)
             {
                 try
                 {
@@ -50,7 +54,7 @@ namespace DietProject.Core.DataAccess
 
         public Dietitian Get(Expression<Func<Dietitian, bool>> prop)
         {
-            using (DietProjectContext context = new DietProjectContext())
+            using (DietProjectContext context = this.context)
             {
                 try
                 {
@@ -65,7 +69,7 @@ namespace DietProject.Core.DataAccess
 
         public IList<Dietitian> GetAll(Expression<Func<Dietitian, bool>> prop)
         {
-            using (DietProjectContext context = new DietProjectContext())
+            using (DietProjectContext context = this.context)
             {
                 try
                 {
@@ -80,7 +84,7 @@ namespace DietProject.Core.DataAccess
 
         public bool Update(Dietitian entity)
         {
-            using (DietProjectContext context = new DietProjectContext())
+            using (DietProjectContext context = this.context)
             {
                 try
                 {

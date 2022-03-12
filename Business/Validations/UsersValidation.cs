@@ -17,7 +17,7 @@ namespace DietProject.Business.Validations
                 .MinimumLength(2).WithMessage("Adınız en az 2 karakterden oluşmalıdır.");
 
             RuleFor(x => x.EPosta)
-                .NotEmpty().WithMessage("İsim alanı boş bırakılamaz.")
+                .NotEmpty().WithMessage("E-Posta alanı boş bırakılamaz.")
                 .MinimumLength(5).WithMessage("E-posta alanı yetersiz.")
                 .EmailAddress().WithMessage("E-Posta formatınız doğru değil.");
 

@@ -10,9 +10,9 @@ namespace DietProject.Core.DataAccess
 {
     public class DietProjectContext : DbContext
     {
-        public DietProjectContext() : base()
+        public DietProjectContext(DbContextOptions<DietProjectContext> options) : base(options)
         {
-         
+
         }
 
         // @"Server=.\SQLEXPRESS;Database=DietSystem;Trusted_Connection=True;"

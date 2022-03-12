@@ -1,0 +1,54 @@
+﻿@using DevExtreme.AspNet.Mvc
+@{
+    ViewData["Title"] = "Register";
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+}
+
+<div class="row g-0">
+    <div class="col-lg-6 d-none d-lg-flex justify-content-center align-items-center rounded-lg auth-h100">
+        <div style="max-width: 25rem;">
+            <div class="text-center mb-5">
+                <i class="bi bi-bag-check-fill  text-primary" style="font-size: 90px;"></i>
+            </div>
+            <div class="mb-5">
+                <h2 class="color-900 text-center">Hoşgeldiniz :)</h2>
+            </div>
+            <!-- Image block -->
+            <div class="">
+                <img src="~/assets/images/login-img.svg" alt="login-img">
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6 d-flex justify-content-center align-items-center border-0 rounded-lg auth-h100">
+        <div class="w-100 p-3 p-md-5 card border-0 shadow-sm" style="max-width: 32rem;">
+            <h4>Giriş Yap</h4>
+            <!-- Form -->
+            @using (Html.BeginForm("PostRegister", "Auth", FormMethod.Post))
+            {
+
+                @Html.AntiForgeryToken()
+                ;
+                @(Html.DevExtreme().Form<DietProject.Core.Entities.User>()
+            .LabelLocation(FormLabelLocation.Top)
+                    .ShowValidationSummary(true)
+            .Items(items =>
+            {
+
+            items.AddSimpleFor(m => m.FullName);
+
+            items.AddSimpleFor(m => m.EPosta)
+            .Editor(x=>x.TextBox().Mode(TextBoxMode.Email));
+
+            items.AddSimpleFor(m => m.Password).Editor(X => X.TextBox().Mode(TextBoxMode.Password));
+
+            items.AddButton().HorizontalAlignment(HorizontalAlignment.Right)
+            .ButtonOptions(x => x.UseSubmitBehavior(true).Text("Kayıt Ol!").Type(ButtonType.Default));
+            })
+            )
+                <!-- End Form -->
+            }
+
+        </div>
+    </div>
+</div> 

@@ -26,23 +26,24 @@
             <form class="row g-1 p-3 p-md-4" method="post">
 
                 @(Html.DevExtreme().Form<DietProject.Core.Entities.User>()
-                .Items(items => {
+                    .Items(items => {
 
-                    items.AddSimpleFor(m => m.EPosta)
-                    .Label(x=>x.Text("E-Posta").Location(FormLabelLocation.Top))
-                    .Editor(x=>x.TextBox().Mode(TextBoxMode.Email))
-                    .IsRequired(true);
+                                        items.AddSimpleFor(m => m.EPosta)
+                                            .Label(x=>x.Text("E-Posta").Location(FormLabelLocation.Top))
+                                            .Editor(x=>x.TextBox().Mode(TextBoxMode.Email))
+                                            .IsRequired(true);
 
-                    items.AddSimpleFor(m => m.Password)
-                    .Label(x=>x.Text("Şifre").Location(FormLabelLocation.Top))
-                    .Editor(x=>x.TextBox().Mode(TextBoxMode.Password))
-                    .IsRequired(true);
+                                        items.AddSimpleFor(m => m.Password)
+                                            .Label(x=>x.Text("Şifre").Location(FormLabelLocation.Top))
+                                            .Editor(x=>x.TextBox().Mode(TextBoxMode.Password))
+                                            .IsRequired(true);
 
-                    items.AddButton()
-                    .ButtonOptions(x=>x.UseSubmitBehavior(true).Text("Giriş Yap"));
-                })
-                )
+                                        items.AddButton()
+                                            .ButtonOptions(x=>x.UseSubmitBehavior(true).Text("Giriş Yap"));
+                    })
+                    )
             </form>
+            @Html.ActionLink("Hesabınız yok mu?","Register","Auth")
             <!-- End Form -->
 
         </div>

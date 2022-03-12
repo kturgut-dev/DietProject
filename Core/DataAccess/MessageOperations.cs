@@ -11,10 +11,14 @@ namespace DietProject.Core.DataAccess
 {
     public class MessageOperations : IBaseOperations<Message>
     {
-
+        private DietProjectContext context;
+        public MessageOperations(DietProjectContext context)
+        {
+            this.context = context;
+        }
         public bool Add(Message entity)
         {
-            using (DietProjectContext context = new DietProjectContext())
+            using (DietProjectContext context = this.context)
             {
                 try
                 {
@@ -32,7 +36,7 @@ namespace DietProject.Core.DataAccess
 
         public bool Delete(Message entity)
         {
-            using (DietProjectContext context = new DietProjectContext())
+            using (DietProjectContext context = this.context)
             {
                 try
                 {
@@ -50,7 +54,7 @@ namespace DietProject.Core.DataAccess
 
         public Message Get(Expression<Func<Message, bool>> prop)
         {
-            using (DietProjectContext context = new DietProjectContext())
+            using (DietProjectContext context = this.context)
             {
                 try
                 {
@@ -65,7 +69,7 @@ namespace DietProject.Core.DataAccess
 
         public IList<Message> GetAll(Expression<Func<Message, bool>> prop)
         {
-            using (DietProjectContext context = new DietProjectContext())
+            using (DietProjectContext context = this.context)
             {
                 try
                 {
@@ -80,7 +84,7 @@ namespace DietProject.Core.DataAccess
 
         public bool Update(Message entity)
         {
-            using (DietProjectContext context = new DietProjectContext())
+            using (DietProjectContext context = this.context)
             {
                 try
                 {
