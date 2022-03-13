@@ -128,7 +128,10 @@ namespace DietProject.Web.Controllers
                         $"Merhaba, hesabınızı lütfen doğrulayınız.<br><br><a href=\"{activationUrl}\">Aktivasyon Linki</a>");
 
                     if (!mailResult)
+                    {
                         ViewBag.ViewMessage = "E-Posta adresinize mail gönderilemedi.";
+                        return View();
+                    }
 
                     return RedirectToAction(nameof(Login));
                 }
