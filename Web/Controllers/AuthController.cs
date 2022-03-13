@@ -122,7 +122,7 @@ namespace DietProject.Web.Controllers
                         return RedirectToAction(nameof(Login));
                     }
 
-                    string activationUrl = "http://localhost:55867/" + this.Url.Action("Verify", "Auth", null) + $"//{token}";
+                    string activationUrl = @"http://localhost:55867/Verify/" + $"{token}";
 
                     bool mailResult = await MailHelpers.SendMail(submitData.EPosta, $"Hesap Aktivasyon Linki - Diet Project",
                         $"Merhaba, hesabınızı lütfen doğrulayınız.<br><br><a href=\"{activationUrl}\">Aktivasyon Linki</a>");

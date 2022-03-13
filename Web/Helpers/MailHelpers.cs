@@ -28,7 +28,7 @@ namespace Web.Helpers
                     .From("dietproject.98@gmail.com", "Diet Projesi")
                     .To(toMailAddress)
                     .Subject(title)
-                    .Body(bodyContent);
+                    .Body(bodyContent, true);
 
                 SendResponse result = await email.SendAsync();
                 return result.Successful;
