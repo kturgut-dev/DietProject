@@ -1,6 +1,8 @@
 ﻿using System;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Web.Extensions
@@ -15,6 +17,7 @@ namespace Web.Extensions
                     opts.Cookie.Name = $"admin.auth";
                     opts.AccessDeniedPath = "/Home/AccessDenied";
                     opts.LoginPath = "/Login";
+                    opts.LogoutPath = "/Logout";
                     opts.SlidingExpiration = true;
                     opts.ExpireTimeSpan = TimeSpan.FromHours(4);
                 });

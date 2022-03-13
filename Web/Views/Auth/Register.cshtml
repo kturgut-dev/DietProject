@@ -23,15 +23,19 @@
     <div class="col-lg-6 d-flex justify-content-center align-items-center border-0 rounded-lg auth-h100">
         <div class="w-100 p-3 p-md-5 card border-0 shadow-sm" style="max-width: 32rem;">
             <h4>Giriş Yap</h4>
+            @if (ViewBag.ViewMessage != null)
+            {
+                <div class="alert alert-warning">@ViewBag.ViewMessage.ToString()</div>
+            }
             <!-- Form -->
-            @using (Html.BeginForm("PostRegister", "Auth", FormMethod.Post))
+            @using (Html.BeginForm("Register", "Auth", FormMethod.Post))
             {
 
                 @Html.AntiForgeryToken()
                 ;
                 @(Html.DevExtreme().Form<DietProject.Core.Entities.User>()
             .LabelLocation(FormLabelLocation.Top)
-                    .ShowValidationSummary(true)
+            .ShowValidationSummary(true)
             .Items(items =>
             {
 

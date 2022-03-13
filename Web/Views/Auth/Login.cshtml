@@ -22,6 +22,10 @@
     <div class="col-lg-6 d-flex justify-content-center align-items-center border-0 rounded-lg auth-h100">
         <div class="w-100 p-3 p-md-5 card border-0 shadow-sm" style="max-width: 32rem;"> 
             <h4>Giriş Yap</h4>
+            @if (ViewBag.ViewMessage != null)
+            {
+                <div class="alert alert-warning">@ViewBag.ViewMessage.ToString()</div>
+            }
             <!-- Form -->
             <form class="row g-1 p-3 p-md-4" method="post">
 
@@ -43,9 +47,8 @@
                     })
                     )
             </form>
-            @Html.ActionLink("Hesabınız yok mu?","Register","Auth")
+            <span> Hesabınız yok mu? @Html.ActionLink("Kayıt Ol","Register","Auth")</span> 
             <!-- End Form -->
-
         </div>
     </div>
 </div> 

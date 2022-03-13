@@ -6,100 +6,19 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Core.DataAccess;
 using Microsoft.EntityFrameworkCore;
 
 namespace DietProject.Core.DataAccess
 {
-    public class UserOperations : IBaseOperations<User>
+    public class UserOperations : BaseDataAccess<User>
     {
-        private DietProjectContext _context;
-        public UserOperations(DietProjectContext context)
-        {
-            _context = context;
-        }
-        public bool Add(User entity)
-        {
-            using (_context)
-            {
-                try
-                {
-                    _context.Users.AddAsync(entity)
-                        .GetAwaiter().GetResult();
-                    _context.SaveChangesAsync()
-                        .GetAwaiter().GetResult();
+        public UserOperations(IDbContextFactory<DietProjectContext> blogContext) : base(blogContext) { }
 
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    return false;
-                }
-            }
+        public User Login(string email, string hashedPass)
+        {
+            return base.Get(x => x.EPosta == email && x.Password == hashedPass);
         }
 
-        public bool Delete(User entity)
-        {
-            using (_context)
-            {
-                try
-                {
-                    _context.Users.Remove(entity);
-                    _context.SaveChanges();
-
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    return false;
-                }
-            }
-        }
-
-        public User Get(Expression<Func<User, bool>> prop)
-        {
-            using (_context)
-            {
-                try
-                {
-                    return _context.Users.Find(prop);
-                }
-                catch (Exception ex)
-                {
-                    return null;
-                }
-            }
-        }
-
-        public IList<User> GetAll(Expression<Func<User, bool>> prop)
-        {
-            using (_context)
-            {
-                try
-                {
-                    return _context.Users.Where(prop).ToList();
-                }
-                catch (Exception ex)
-                {
-                    return null;
-                }
-            }
-        }
-
-        public bool Update(User entity)
-        {
-            using (_context)
-            {
-                try
-                {
-                    _context.Entry(entity).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                    _context.SaveChanges();
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    return false;
-                }
-            }
-        }
     }
 }
