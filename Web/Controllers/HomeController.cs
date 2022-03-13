@@ -12,7 +12,7 @@ namespace Web.Controllers
     {
         public IActionResult Index()
         {
-            return View("~/Views/Home/Index.cshtml");
+            return View();//"~/Views/Home/Index.cshtml"
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

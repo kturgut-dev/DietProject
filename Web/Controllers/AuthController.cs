@@ -10,8 +10,10 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using Web.Helpers;
+using Microsoft.AspNetCore.Http.Extensions;
 
 namespace DietProject.Web.Controllers
 {
@@ -88,7 +90,7 @@ namespace DietProject.Web.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken, Route("Register")]
-        public IActionResult Register(User submitData)
+        public async Task<IActionResult> Register(User submitData)
         {
             try
             {
@@ -105,6 +107,28 @@ namespace DietProject.Web.Controllers
                 if (isSuccess)
                 {
                     //Mail Gönderme Operasyonları
+                    ViewBag.ViewMessage = "Hesabınız başarıyla oluşturuldu. E-Postanıza gönderilen mail üzerinden hesabınızı doğrulayınız.";
+                    string token = Guid.NewGuid().ToString("N");
+
+                    User userData = _UserOperations.Get(x => x.EPosta == submitData.EPosta);
+                    if (userData != null)
+                    {
+                        userData.VerifyToken = token;
+                        _UserOperations.Update(userData);
+                    }
+                    else
+                    {
+                        ViewBag.ViewMessage = "E-Posta adresinize mail gönderilemedi.";
+                        return RedirectToAction(nameof(Login));
+                    }
+
+                    string activationUrl = "http://localhost:55867/" + this.Url.Action("Verify", "Auth", null) + $"//{token}";
+
+                    bool mailResult = await MailHelpers.SendMail(submitData.EPosta, $"Hesap Aktivasyon Linki - Diet Project",
+                        $"Merhaba, hesabınızı lütfen doğrulayınız.<br><br><a href=\"{activationUrl}\">Aktivasyon Linki</a>");
+
+                    if (!mailResult)
+                        ViewBag.ViewMessage = "E-Posta adresinize mail gönderilemedi.";
 
                     return RedirectToAction(nameof(Login));
                 }
@@ -126,6 +150,27 @@ namespace DietProject.Web.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction(nameof(Login));
+        }
+
+        [HttpGet, AllowAnonymous, Route("Verify/{token}")]
+        public ActionResult Verify(string token)
+        {
+            User tokenVerifyUser = _UserOperations.Get(x => x.VerifyToken == token);
+            if (tokenVerifyUser != null)
+            {
+                if (tokenVerifyUser.IsActive)
+                    ViewBag.ViewMessage = "Geçersiz aktivasyon işlemi.";
+                else
+                {
+                    tokenVerifyUser.IsActive = true;
+                    bool updateResponse = _UserOperations.Update(tokenVerifyUser);
+                    ViewBag.ViewMessage = updateResponse ? "Hesabınız başarıyla doğrulandı. Giriş yapabilirsiniz." : "Hesabınız doğrulanırken bir sorun oluştu.";
+                }
+            }
+            else
+                ViewBag.ViewMessage = "Geçersiz aktivasyon işlemi.";
+
             return RedirectToAction(nameof(Login));
         }
     }

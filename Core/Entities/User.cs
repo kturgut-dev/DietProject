@@ -13,6 +13,7 @@ namespace DietProject.Core.Entities
         public string EPosta { get; set; }
         public bool IsActive { get; set; }
         public string Password { get; set; }
+        public string VerifyToken { get; set; }
 
     }
 }
