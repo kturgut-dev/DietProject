@@ -1,0 +1,31 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutWelcomeWizard.cshtml";
+}
+
+
+<div class="row">
+    <div class="col-6 text-center h3 p-2 text-primary">Danışan mısınız?</div>
+    <div class="col-6 text-center h3 p-2 text-primary">Diyetisyen misiniz?</div>
+</div>
+<div class="row">
+    <div class="col-6 hover">
+        <div class="card mb-3 hover">
+            <div class="card-body text-center p-5">
+                <img src="~/assets/images/customer.jpg" class="img-fluid " width="465px" alt="No Data">
+                <div class="mt-4 mb-2">
+                </div>
+                <a href="@Url.Action("Customer","Welcome")" class="btn btn-primary border lift mt-1">Danışan</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 hover">
+        <div class="card mb-3 hover-shadow">
+            <div class="card-body text-center p-5">
+                <img src="~/assets/images/dietitian.jpg" class="img-fluid " width="350px" alt="No Data">
+                <div class="mt-4 mb-2">
+                </div>
+                <a href="@Url.Action("Dietitian","Welcome")" class="btn btn-primary border lift mt-1">Diyetisyen</a>
+            </div>
+        </div>
+    </div>
+</div>

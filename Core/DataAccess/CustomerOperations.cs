@@ -15,5 +15,10 @@ namespace DietProject.Core.DataAccess
     {
         public CustomerOperations(IDbContextFactory<DietProjectContext> blogContext) : base(blogContext) {}
 
+        public bool UserIsExists(Int64 UserID)
+        {
+            return base.Get(x => x.UserID == UserID) != null;
+        }
+
     }
 }

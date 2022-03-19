@@ -14,6 +14,11 @@ namespace DietProject.Core.DataAccess
     public class DietitianOperations : BaseDataAccess<Dietitian>
     {
         public DietitianOperations(IDbContextFactory<DietProjectContext> blogContext) : base(blogContext) { }
+
+        public bool UserIsExists(Int64 UserID)
+        {
+            return base.Get(x=>x.UserID == UserID) != null;
+        }
       
     }
 }

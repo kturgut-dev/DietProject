@@ -1,0 +1,82 @@
+﻿@using DevExtreme.AspNet.Mvc
+@{
+    Layout = "~/Views/Shared/_LayoutWelcomeWizard.cshtml";
+}
+
+
+<div class="row">
+    <div class="col-12 hover">
+        <div class="card mb-3 hover">
+            <div class="card-body text-center p-5">
+
+                <form id="form" method="post" action="@Url.Action("Dietitian","Welcome")" enctype="multipart/form-data">
+                    <h3>Hesap Kurulumu</h3>
+                    <div class="dx-form-group">
+                        <div class="dx-field">
+                            <div class="dx-field-label float-left">Ücretiniz (Aylık):</div>
+                            <div class="dx-field-value">
+                                @(Html.DevExtreme().NumberBox()
+                                .Name("MonthlyPrice")
+                                .Value(150)
+                                )
+                            </div>
+                        </div>
+                        <div class="dx-field">
+                            <div class="dx-field-label float-left">Şehir:</div>
+                            <div class="dx-field-value">
+                                @(Html.DevExtreme().Lookup()
+                                .DataSource(x=>x.Mvc().Controller("Welcome").LoadAction("CityList").Key("name"))
+                                .DisplayExpr("name")
+                                .ValueExpr("name")
+                                .Name("CityName")
+                                )
+                            </div>
+                        </div>
+                        <div class="dx-field">
+                            <div class="dx-field-label float-left">Diploma:</div>
+                            <div class="dx-field-value">
+                                @(Html.DevExtreme().FileUploader()
+                                .Name("CertificatePath")
+                                .SelectButtonText("Döküman Seç")
+                                .LabelText("")
+                                .Accept("image/*")
+                                .UploadMode(FileUploadMode.UseForm)
+                                )
+                            </div>
+                        </div>
+                    </div>
+                    @(Html.DevExtreme().Button()
+                    .ID("button")
+                    .Text("Hesap Kurlumunu Bitir")
+                    .Type(ButtonType.Success)
+                    .UseSubmitBehavior(true)
+                    )
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    #form {
+        max-width: 600px;
+        margin: auto;
+    }
+
+    #button {
+        margin-top: 50px;
+        margin-right: 20px;
+        float: right;
+    }
+
+    #fileuploader-container {
+        border: 1px solid #d3d3d3;
+        margin: 20px 20px 0 20px;
+    }
+
+    #form h3 {
+        margin-left: 20px;
+        font-weight: normal;
+        font-size: 22px;
+    }</style>

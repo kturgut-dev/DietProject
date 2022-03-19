@@ -14,6 +14,7 @@ namespace DietProject.Core.Entities
         public bool IsActive { get; set; }
         public string Password { get; set; }
         public string VerifyToken { get; set; }
+        public bool IsAdmin { get; set; }
 
     }
 }

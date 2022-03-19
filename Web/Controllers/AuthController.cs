@@ -22,9 +22,16 @@ namespace DietProject.Web.Controllers
     public class AuthController : Controller
     {
         private readonly UserOperations _UserOperations;
+
+        private readonly CustomerOperations _CustomerOperations;
+
+        private readonly DietitianOperations _DietitianOperations;
+
         public AuthController(IDbContextFactory<DietProjectContext> contextFactory)
         {
             _UserOperations = new UserOperations(contextFactory);
+            _CustomerOperations = new CustomerOperations(contextFactory);
+            _DietitianOperations = new DietitianOperations(contextFactory);
         }
 
         public IActionResult Index()
@@ -70,6 +77,19 @@ namespace DietProject.Web.Controllers
 
                 ClaimsIdentity claimsIdentity = new ClaimsIdentity(loginClaims, CookieAuthenticationDefaults.AuthenticationScheme);
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+
+                //kullanıcı hesap kurlumu kontrolü
+                //customer tablosunu kontrol et
+                //diyetisyen tablosunu kontrol et
+
+                if (!userExists.IsAdmin)
+                {
+                    bool customerIsExits = _CustomerOperations.UserIsExists(userExists.ID);
+                    bool dietitianIsExits = _DietitianOperations.UserIsExists(userExists.ID);
+
+                    if (!customerIsExits && !dietitianIsExits)
+                        return Redirect("/Welcome");
+                }
 
                 return Redirect("/");
             }
