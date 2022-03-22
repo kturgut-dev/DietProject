@@ -1,3 +1,4 @@
+@using Web.Models
 <!DOCTYPE html>
 
 <html>
@@ -14,18 +15,20 @@
     @* Uncomment to use the HtmlEditor control *@
     @* <script src="https://unpkg.com/devextreme-quill@21_2/dist/dx-quill.min.js"></script> *@
 
-        <!-- project css file  -->
+    <!-- project css file  -->
     <link rel="stylesheet" href="~/assets/css/ebazar.style.min.css">
 
     <link rel="stylesheet" href="~/css/vendor.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/Site.css" />
     <script src="~/js/vendor.js" asp-append-version="true"></script>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 </head>
 
 <body>
 
-   <div id="ebazar-layout" class="theme-blue">
-        
+    <div id="ebazar-layout" class="theme-blue">
+
 
         <!-- main body area -->
         <div class="main px-lg-4 px-md-4">
@@ -34,16 +37,16 @@
             <div class="header">
                 <nav class="navbar py-4">
                     <div class="container-xxl">
-        
+
                         <!-- header rightbar icon -->
                         <div class="h-right d-flex align-items-center mr-5 mr-lg-0 order-1">
-                           @* <div class="d-flex">
+                            @* <div class="d-flex">
                                 <a class="nav-link text-primary collapsed" href="help.html" title="Get Help">
-                                    <i class="icofont-info-square fs-5"></i>
+                                <i class="icofont-info-square fs-5"></i>
                                 </a>
-                            </div>*@
-                           
-                           
+                                </div>*@
+
+
                             <div class="d-flex dropdown user-profile ml-2 ml-sm-3 d-flex align-items-center zindex-popover">
                                 <div class="u-info me-2">
                                     <p class="mb-0 text-end line-height-sm "><span class="font-weight-bold">John Quinn</span></p>
@@ -62,7 +65,7 @@
                                                     <small class="">Johnquinn@gmail.com</small>
                                                 </div>
                                             </div>
-                                            
+
                                             <div><hr class="dropdown-divider border-dark"></div>
                                         </div>
                                         <div class="list-group m-2 ">
@@ -77,21 +80,21 @@
                                 <a href="#" data-bs-toggle="modal" data-bs-target="#Settingmodal"><i class="icofont-gear-alt fs-5"></i></a>
                             </div>
                         </div>
-        
-                      @*  <!-- menu toggler -->
-                        <button class="navbar-toggler p-0 border-0 menu-toggle order-3" type="button" data-bs-toggle="collapse" data-bs-target="#mainHeader">
+
+                        @*  <!-- menu toggler -->
+                            <button class="navbar-toggler p-0 border-0 menu-toggle order-3" type="button" data-bs-toggle="collapse" data-bs-target="#mainHeader">
                             <span class="fa fa-bars"></span>
-                        </button>
-        
-                        <!-- main menu Search-->
-                        <div class="order-0 col-lg-4 col-md-4 col-sm-12 col-12 mb-3 mb-md-0 ">
+                            </button>
+
+                            <!-- main menu Search-->
+                            <div class="order-0 col-lg-4 col-md-4 col-sm-12 col-12 mb-3 mb-md-0 ">
                             <div class="input-group flex-nowrap input-group-lg">
-                                <input type="search" class="form-control" placeholder="Search" aria-label="search" aria-describedby="addon-wrapping">
-                                <button type="button" class="input-group-text" id="addon-wrapping"><i class="fa fa-search"></i></button>
-                                
+                            <input type="search" class="form-control" placeholder="Search" aria-label="search" aria-describedby="addon-wrapping">
+                            <button type="button" class="input-group-text" id="addon-wrapping"><i class="fa fa-search"></i></button>
+
                             </div>
-                        </div>
-        *@
+                            </div>
+                        *@
                     </div>
                 </nav>
             </div>
@@ -99,7 +102,7 @@
             <!-- Body: Body -->
             <div class="body d-flex py-lg-3 py-md-2">
                 <div class="container-xxl">
-                          @RenderBody()
+                    @RenderBody()
                 </div>
             </div>
 
@@ -109,6 +112,22 @@
 
     <!-- Jquery Core Js -->
     <script src="~/assets/bundles/libscripts.bundle.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    @if (ViewData["ViewMeessage"] != null)
+    {
+        <script>
+
+            Toastify({
+             text: '@(((ViewMessage)ViewData["ViewMeessage"]).Message)',
+             duration: 3000,
+             close: true,
+             gravity: 'top', // `top` or `bottom`
+             position: 'left', // `left`, `center` or `right`
+             stopOnFocus: true, // Prevents dismissing of toast on hover
+            }).showToast();"
+
+        </script>
+    }
 
     <!-- Jquery Page Js -->
     @*<script src="~/assets/js/template.js"></script>*@
