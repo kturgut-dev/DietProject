@@ -72,13 +72,15 @@ namespace Core.DataAccess
             }
         }
 
-        public IList<TEntity> GetAll(Expression<Func<TEntity, bool>> prop)
+        public IList<TEntity> GetAll(Expression<Func<TEntity, bool>> prop = null)
         {
             using (DbContext context = _contextFactory.CreateDbContext())
             {
                 try
                 {
-                    return context.Set<TEntity>().Where(prop)
+                    
+                    return prop==null ? context.Set<TEntity>().ToListAsync().GetAwaiter().GetResult()
+                        : context.Set<TEntity>().Where(prop)
                             .ToListAsync().GetAwaiter().GetResult();
                 }
                 catch (Exception ex)
