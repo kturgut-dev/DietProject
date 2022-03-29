@@ -1,10 +1,6 @@
 ﻿using DietProject.Core.Entities;
+using ContosoUniversity.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DietProject.Core.DataAccess
 {
@@ -13,6 +9,18 @@ namespace DietProject.Core.DataAccess
         public DietProjectContext(DbContextOptions<DietProjectContext> options) : base(options)
         {
 
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Comment>().ToTable("Comments");
+            modelBuilder.Entity<Contract>().ToTable("Contracts");
+            modelBuilder.Entity<Customer>().ToTable("Customers");
+            modelBuilder.Entity<DietDetail>().ToTable("DietDetails");
+            modelBuilder.Entity<Dietitian>().ToTable("Dietitians");
+            modelBuilder.Entity<Food>().ToTable("Foods");
+            modelBuilder.Entity<Message>().ToTable("Messages");
+            modelBuilder.Entity<User>().ToTable("Users");
         }
 
         // @"Server=.\SQLEXPRESS;Database=DietSystem;Trusted_Connection=True;"

@@ -10,6 +10,8 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -46,7 +48,7 @@ namespace Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DietProjectContext db)
         {
             if (env.IsDevelopment())
             {
@@ -56,13 +58,21 @@ namespace Web
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+
+            //http://www.binaryintellect.net/articles/87446533-54b3-41ad-bea9-994091686a55.aspx
+            //if ((db.Database.GetService<IDatabaseCreator>() as RelationalDatabaseCreator).Exists())
+            //    db.Database.Migrate();
+            //else
+            //db.Database.EnsureCreated();
+
             app.UseStaticFiles();
 
             app.UseRouting();
 
             app.UseAuth();
 
-            app.UseEndpoints(endpoints => {
+            app.UseEndpoints(endpoints =>
+            {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
