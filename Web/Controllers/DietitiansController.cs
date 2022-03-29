@@ -1,6 +1,7 @@
 ﻿using Core.Entities.Abstract;
 using DietProject.Core.DataAccess;
 using DietProject.Core.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using System.Collections.Generic;
 
 namespace Web.Controllers
 {
+    [Authorize]
     public class DietitiansController : Controller
     {
         public DietitianOperations _dietitianOperations { get; set; }
@@ -95,10 +97,22 @@ namespace Web.Controllers
         // POST: DietitiansController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(Int64 id, IFormCollection collection)
         {
             try
             {
+                Dietitian dietitianData = _dietitianOperations.Get(x => x.ID == id);
+                if (dietitianData == null) return RedirectToAction(nameof(Index));
+
+                User userData = _userOperations.Get(x => x.ID == dietitianData.UserID);
+                if (userData == null) return RedirectToAction(nameof(Index));
+
+                userData.FullName = collection["FullName"];
+                dietitianData.Bio = collection["Bio"];
+                dietitianData.MonthlyPrice = Convert.ToDouble(collection["MonthlyPrice"]);
+
+                _dietitianOperations.Update(dietitianData);
+                _userOperations.Update(userData);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -108,23 +122,23 @@ namespace Web.Controllers
         }
 
         // GET: DietitiansController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: DietitiansController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(Int64 id)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                Dietitian resultDietitian = _dietitianOperations.Get(x => x.ID == id);
+                if (resultDietitian == null) return Ok(new { Message = "Kullanıcı bulunamadı.", IsSuccess = false });
+
+                User resultUser = _userOperations.Get(x => x.ID == resultDietitian.UserID);
+                if (resultUser == null) return Ok(new { Message = "Kullanıcı bulunamadı.", IsSuccess = false });
+
+                _dietitianOperations.Delete(resultDietitian);
+                _userOperations.Delete(resultUser);
+                return Ok(new { Message = "Kayıt silindi.", IsSuccess = true });
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                return Ok(new { Message = "Kayıt silinirken bir sorun oluştu. Hata Mesajı: " + ex.Message, IsSuccess = false });
             }
         }
     }

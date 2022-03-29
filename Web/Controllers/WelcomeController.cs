@@ -69,7 +69,7 @@ namespace Web.Controllers
                 using (var fileStream = System.IO.File.Create(fileName))
                 {
                     CertificatePath.CopyTo(fileStream);
-                    dietitian.CertificatePath = fileName;
+                    dietitian.CertificatePath = @"\uploads\images\" + CertificatePath.FileName;
                 }
 
                 bool insertRes = _dietitianOperations.Add(dietitian);
