@@ -1,0 +1,49 @@
+﻿@using DevExtreme.AspNet.Mvc
+@using DietProject.Core.Entities
+@model List<Dietitian>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div>
+    Diyetisyenler
+
+@(Html.DevExtreme().DataGrid()
+    .ID("dietitians")
+    .ShowBorders(true)
+    .DataSource(Model)
+    .Columns(x=>{
+        x.Add().DataField("ID").Caption("#").Width("25");
+        x.Add().DataField("AdSoyad").Caption("Ad ve Soyad");
+        x.Add().DataField("IsCertificate").Caption("Onaylı Mı?")
+        .DataType(GridColumnDataType.Boolean);
+        x.Add().DataField("IsCertificateVerDate").Caption("Diploma Onay Tarihi")
+        .DataType(GridColumnDataType.Date);
+        x.Add().DataField("CityName").Caption("Şehir");
+        x.Add().DataField("MonthlyPrice").Caption("Aylık Ücret").DataType(GridColumnDataType.Number);
+
+         x.Add()
+            .Type(GridCommandColumnType.Buttons)
+            .Width(110)
+            .Buttons(b => {
+
+                b.Add()
+                    .Hint("Clone")
+                    .Icon("edit")
+                    .Visible(true)
+                    .OnClick("onDietitianProfile");
+            });
+    }  
+    )
+    .HeaderFilter(x=>x.AllowSearch(true))
+    .SearchPanel(x=>x.Visible(true).Placeholder("Ara..."))
+    .GroupPanel(x=>x.Visible(true).EmptyPanelText("Gruplamak için buraya sürükleyiniz."))
+    .Paging(x=>x.Enabled(true).PageSize(25))
+    .KeyExpr("ID")
+)
+</div>
+<script>
+
+function onDietitianProfile(e){
+    console.log(e)
+}
+</script>

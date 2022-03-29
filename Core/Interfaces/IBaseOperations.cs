@@ -14,6 +14,6 @@ namespace DietProject.Core.Interfaces
         bool Update(T entity);
         bool Delete(T entity);
         T Get(Expression<Func<T, bool>> prop);// ID == 5
-        IList<T> GetAll(Expression<Func<T, bool>> prop);// FoodName = 'Elma'
+        IList<T> GetAll(Expression<Func<T, bool>> prop = null);// FoodName = 'Elma'
     }
 }
