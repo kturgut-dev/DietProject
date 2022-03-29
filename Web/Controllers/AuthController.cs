@@ -72,6 +72,7 @@ namespace DietProject.Web.Controllers
                 {
                     new Claim("UserID",userExists.ID.ToString()),
                     new Claim("EPosta",userExists.EPosta),
+                    new Claim("IsAdmin", userExists.IsAdmin.ToString()),
                     new Claim("FullName",userExists.FullName),
                 };
 
