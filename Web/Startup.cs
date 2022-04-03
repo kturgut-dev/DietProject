@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using DietProject.Business.Validations;
 using DietProject.Core.DataAccess;
 using DietProject.Core.Entities;
@@ -10,12 +6,11 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Web.Extensions;
+using Web.Hubs;
 
 namespace Web
 {
@@ -45,6 +40,10 @@ namespace Web
             services.AddDbContextFactory<DietProjectContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DietProject")));
 
             services.AddAuth();
+
+            services.AddSignalR();
+
+            Chat.AcitveUsers = new System.Collections.Generic.List<Models.SocketUser>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -71,12 +70,16 @@ namespace Web
 
             app.UseAuth();
 
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+                endpoints.MapHub<Chat>("/chathub");
             });
+
         }
     }
 }

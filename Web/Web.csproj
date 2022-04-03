@@ -23,6 +23,8 @@
       <None Include="wwwroot\assets\js\page\profile.js" />
       <None Include="wwwroot\assets\js\page\todo.js" />
       <None Include="wwwroot\assets\js\template.js" />
+      <None Include="wwwroot\js\jquery-template\dist\jquery.loadTemplate.js" />
+      <None Include="wwwroot\js\jquery-template\dist\jquery.loadTemplate.min.js" />
     </ItemGroup>
 
     <ItemGroup>
@@ -33,6 +35,9 @@
     <PackageReference Include="FluentEmail.Razor" Version="3.0.2" />
     <PackageReference Include="FluentEmail.Smtp" Version="3.0.2" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="10.4.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="6.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.3">
       <PrivateAssets>all</PrivateAssets>

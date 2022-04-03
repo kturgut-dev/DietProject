@@ -15,6 +15,10 @@
     @* Uncomment to use the HtmlEditor control *@
     @* <script src="https://unpkg.com/devextreme-quill@21_2/dist/dx-quill.min.js"></script> *@
 
+     <link href="~/css/devextreme/dx.light.css" rel="stylesheet" />
+
+    @*<script src="~/js/devextreme/dx.all.js"></script>*@
+
     <!-- project css file  -->
     <link rel="stylesheet" href="~/assets/css/ebazar.style.min.css">
 
@@ -23,8 +27,9 @@
     <script src="~/js/vendor.js" asp-append-version="true"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js" integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/js/all.min.js" integrity="sha512-6PM0qYu5KExuNcKt5bURAoT6KCThUmHRewN3zUFNaoI6Di7XJPTMoT6K0nsagZKk2OB4L7E3q1uQKHNHd4stIQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 
 <body>
@@ -297,6 +302,9 @@
     <!-- Jquery Core Js -->
     <script src="~/assets/bundles/libscripts.bundle.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <script src="~/js/devextreme/jquery.js"></script>
+
     @if (ViewData["ViewMeessage"] != null)
     {
         <script>
@@ -314,6 +322,8 @@
     }
     <!-- Jquery Page Js -->
     @*<script src="~/assets/js/template.js"></script>*@
+
+     @RenderSection("Scripts", required: false)
 </body>
 
 </html>
