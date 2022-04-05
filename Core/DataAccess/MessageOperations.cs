@@ -14,6 +14,23 @@ namespace DietProject.Core.DataAccess
     public class MessageOperations : BaseDataAccess<Message>
     {
         public MessageOperations(IDbContextFactory<DietProjectContext> blogContext) : base(blogContext) { }
-    
+
+        public List<Message> GetLastMessagesUser(Int64 UserID)
+        {
+            using (DbContext context = _contextFactory.CreateDbContext())
+            {
+                try
+                {
+                    return context.Set<Message>().Where(x => x.SendedUserID == UserID || x.ReceiverUserID == UserID)
+                          .GroupBy(l => new { l.SendedUserID, l.ReceiverUserID })
+                          .Select(g => g.OrderByDescending(c => c.ID).FirstOrDefault())
+                          .ToList();
+                }
+                catch (Exception ex)
+                {
+                    return null;
+                }
+            }
+        }
     }
 }

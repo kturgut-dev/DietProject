@@ -1,6 +1,8 @@
 ﻿
-var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
-const userList = [];
+var connection = new signalR.HubConnectionBuilder()
+    .configureLogging(signalR.LogLevel.None)
+    .withUrl("/chatHub").build();
+let userList = [];
 
 async function start() {
     try {
@@ -13,12 +15,6 @@ async function start() {
 };
 
 start();
-
-const messageList =
-{
-    userData: { userID: '', userName: '', msgTime: '' },
-    messages: []
-};
 
 
 connection.on("receiveMessage", function (senderUserId, message) {
@@ -33,13 +29,25 @@ function SendMessage(msg) {
 }
 
 function userListFill() {
-    $('#userMessageList').each(function (i) {
-        userList.push($(this).attr('id')); // This is your rel value
-    });
+    axios.get('/Chat/GetChatHistory')
+        .then(res => {
+            userList = res.data;
+            userListAdd();
+        })
+        .catch(err => {
+            console.error(err);
+        })
+
+    //$('#userMessageList').each(function (i) {
+    //    userList.push($(this).attr('id')); // This is your rel value
+    //});
 }
 
-function userListAdd(userList) {
+function userListAdd() {
+    //userList.forEach(element => {
+    //    console.log(element)
     $("#userMessageList").loadTemplate($("#userTemplate"), userList);
+    //});
 }
 
 //$("#msgSend").click(function () {
@@ -50,11 +58,11 @@ function userListAdd(userList) {
 //});
 
 function msgSendOnClick() {
-    const msg = $('#msgTxt').dxTextBox('instance').option('value');
-    console.log(msg)
+
+    //var txt = $("#msgTxt").val();
+    //console.log(txt)
 
     alert("send msg click");
 }
-
 
 userListFill();

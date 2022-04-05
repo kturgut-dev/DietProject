@@ -18,16 +18,16 @@
                     <div class="tab-pane fade show active" id="chat-recent" role="tabpanel">
                         <ul id="userMessageList" class="list-unstyled list-group list-group-custom list-group-flush mb-0">
 
-                            <!-- Chat Contact -->
-                            <li class="list-group-item px-md-4 py-3 py-md-4">
+                            @*    <!-- Chat Contact -->
+                                <li class="list-group-item px-md-4 py-3 py-md-4">
                                 <a href="javascript:void(0);" class="d-flex">
-                                    <img class="avatar rounded" src="assets/images/xs/avatar6.svg" alt="">
-                                    <div class="flex-fill ms-3 text-truncate">
-                                        <h6 class="d-flex justify-content-between mb-0"><span>Vanessa Knox</span> <small class="msg-time">10:45 AM</small></h6>
-                                        <span class="text-muted">There are many variations of passages</span>
-                                    </div>
+                                <img class="avatar rounded" src="assets/images/xs/avatar6.svg" alt="">
+                                <div class="flex-fill ms-3 text-truncate">
+                                <h6 class="d-flex justify-content-between mb-0"><span>Vanessa Knox</span> <small class="msg-time">10:45 AM</small></h6>
+                                <span class="text-muted">There are many variations of passages</span>
+                                </div>
                                 </a>
-                            </li>
+                                </li>*@
 
                         </ul>
                     </div>
@@ -227,8 +227,15 @@
 
                 <!-- Chat: Footer -->
                 <div class="chat-message">
-                    @(Html.DevExtreme().TextArea().ElementAttr("id","msgTxt").Height(100).Name("msgTxt").Placeholder("Mesaj giriniz..."))
-                    @(Html.DevExtreme().Button().Text("Gönder").ElementAttr("id","msgSend").OnClick("msgSendOnClick"))
+                    <div class="row">
+                        <div class="col-10">
+                            <textarea class="form-control" id="msgTxt" name="msgTxt" height="100" placeholder="Mesaj giriniz..."></textarea>
+                        </div>
+                        <div class="col-2">
+                            @(Html.DevExtreme().Button().Text("Gönder").ElementAttr("id","msgSend").OnClick("msgSendOnClick"))
+                        </div>
+                    </div>
+                    @*@(Html.DevExtreme().TextArea().ElementAttr("id","msgTxt").Height(100).Name("msgTxt").Placeholder("Mesaj giriniz..."))*@
                 </div>
 
             </div>
@@ -239,11 +246,15 @@
 @section Scripts{
 
 <scipt type="text/html" id="userTemplate">
-    <li class="list-group-item px-md-4 py-3 py-md-4" data-content="userID">
+    <li class="list-group-item px-md-4 py-3 py-md-4">
         <a href="javascript:void(0);" class="d-flex">
             <img class="avatar rounded" src="assets/images/xs/avatar6.svg" alt="">
             <div class="flex-fill ms-3 text-truncate">
-                <h6 class="d-flex justify-content-between mb-0"><span data-content="userName"></span> <small class="msg-time" data-content="msgTime"></small></h6>
+                <h6 class="d-flex justify-content-between mb-0">
+                    <span data-content="FullName"></span>
+                    <small class="msg-time" data-content="LastMessageDate"></small>
+                </h6>
+                <span class="text-muted" data-content="LastMessage"></span>
             </div>
         </a>
     </li>

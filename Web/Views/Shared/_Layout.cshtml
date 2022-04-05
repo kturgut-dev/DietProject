@@ -57,6 +57,12 @@
                         </a>
                     </li>
 
+                     <li>
+                        <a class="m-link" href="@Url.Action("Index","Chat")">
+                            <i class="icofont-ui-home"></i><span>Sohbet</span>
+                        </a>
+                    </li>
+
                     <li class="collapsed">
                         <a class="m-link" data-bs-toggle="collapse" data-bs-target="#menu-Authentication" href="#">
                             <i class="icofont-ui-lock"></i> <span>Authentication</span> <span class="arrow icofont-dotted-down ms-auto text-end fs-5"></span>
@@ -304,6 +310,7 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
     <script src="~/js/devextreme/jquery.js"></script>
+
 
     @if (ViewData["ViewMeessage"] != null)
     {
