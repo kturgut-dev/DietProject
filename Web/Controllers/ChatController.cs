@@ -1,9 +1,11 @@
 ﻿using DietProject.Core.DataAccess;
 using DietProject.Core.Entities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using Web.Helpers;
@@ -32,11 +34,12 @@ namespace Web.Controllers
             return View();
         }
 
+        [HttpGet]
         public IActionResult GetChatHistory()
         {
             ClaimHelper.SetUserIdentity(User.Identity);
             IList<Message> oldMessages = _messageOperations.GetLastMessagesUser(ClaimHelper.UserID);
-            
+
             IList<ChatMessage> messages = new List<ChatMessage>();
             foreach (Message message in oldMessages)
             {
@@ -49,6 +52,33 @@ namespace Web.Controllers
                 row.Id = userData.ID;
                 row.LastMessage = message.MessageText;
                 row.LastMessageDate = message.MessageDate.ToString("dd MMM hh:mm");
+
+                messages.Add(row);
+            }
+
+
+            return Ok(messages);
+        }
+
+        [HttpGet("/Chat/GetChatHistory/{id}")]
+        public IActionResult GetChatHistory(Int64 Id)
+        {
+            ClaimHelper.SetUserIdentity(User.Identity);
+            IList<Message> oldMessages = _messageOperations.GetLastMessagesUser(ClaimHelper.UserID, Id);
+
+            IList<ChatMessage> messages = new List<ChatMessage>();
+            foreach (Message message in oldMessages)
+            {
+                ChatMessage row = new ChatMessage();
+
+                User userData = message.SendedUserID == ClaimHelper.UserID ? _userOperations.Get(x => x.ID == message.ReceiverUserID)
+                    : _userOperations.Get(x => x.ID == message.SendedUserID);
+
+                row.FullName = userData.FullName;
+                row.Id = userData.ID;
+                row.LastMessage = message.MessageText;
+                row.LastMessageDate = message.MessageDate < DateTime.Today ?  message.MessageDate.ToString("dd MM hh:mm") : message.MessageDate.ToString("hh:mm");
+                row.IsLeft = message.SendedUserID == Id;
 
                 messages.Add(row);
             }

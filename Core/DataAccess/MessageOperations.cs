@@ -22,8 +22,27 @@ namespace DietProject.Core.DataAccess
                 try
                 {
                     return context.Set<Message>().Where(x => x.SendedUserID == UserID || x.ReceiverUserID == UserID)
+                          .OrderBy(x => x.MessageDate)
                           .GroupBy(l => new { l.SendedUserID, l.ReceiverUserID })
                           .Select(g => g.OrderByDescending(c => c.ID).FirstOrDefault())
+                          .ToList();
+                }
+                catch (Exception ex)
+                {
+                    return null;
+                }
+            }
+        }
+
+        public List<Message> GetLastMessagesUser(Int64 UserID, Int64 ReciverUserID)
+        {
+            using (DbContext context = _contextFactory.CreateDbContext())
+            {
+                try
+                {
+                    return context.Set<Message>()
+                          .Where(x => (x.SendedUserID == UserID || x.ReceiverUserID == UserID) && (x.SendedUserID == ReciverUserID || x.ReceiverUserID == ReciverUserID))
+                          .OrderBy(x => x.MessageDate)
                           .ToList();
                 }
                 catch (Exception ex)

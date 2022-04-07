@@ -8,5 +8,6 @@ namespace DietProject.Core.Entities
         public string LastMessage { get; set; }
         public string FullName { get; set; }
         public string LastMessageDate { get; set; }
+        public bool IsLeft { get; set; }
     }
 }
