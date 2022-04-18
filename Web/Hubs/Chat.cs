@@ -35,7 +35,7 @@ namespace Web.Hubs
 
         public async Task SendMessage(string userID, string message)
         {
-            await Clients.User(userID).SendAsync("receiveMessage", message);
+            await Clients.User(AcitveUsers.First(x => x.UserID == userID).ConID).SendAsync("receiveMessage", message);
         }
 
     }

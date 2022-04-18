@@ -21,10 +21,8 @@ namespace DietProject.Core.DataAccess
             {
                 try
                 {
-                    return context.Set<Message>().Where(x => x.SendedUserID == UserID || x.ReceiverUserID == UserID)
-                          .OrderBy(x => x.MessageDate)
-                          .GroupBy(l => new { l.SendedUserID, l.ReceiverUserID })
-                          .Select(g => g.OrderByDescending(c => c.ID).FirstOrDefault())
+                    return context.Set<Message>()
+                          .FromSqlRaw("exec dbo.spSelectMessagesGrouping {0}", UserID)
                           .ToList();
                 }
                 catch (Exception ex)

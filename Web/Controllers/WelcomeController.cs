@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
@@ -31,7 +32,8 @@ namespace Web.Controllers
         [HttpGet]
         public IActionResult Customer()
         {
-            return View();
+
+            return View(DateLookupDataSources());
         }
 
         [HttpPost]
@@ -101,6 +103,43 @@ namespace Web.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500);
+            }
+        }
+
+        private DateLookupDataSource DateLookupDataSources()
+        {
+            try
+            {
+                DateLookupDataSource jsonData = new DateLookupDataSource();
+
+                List<LookupEditDataSource> daysDataSource = new List<LookupEditDataSource>();
+                for (int i = 1; i < 32; i++)
+                    daysDataSource.Add(new LookupEditDataSource(i.ToString(), i.ToString()));
+
+                jsonData.Days = daysDataSource;
+
+                List<LookupEditDataSource> monthDataSource = new List<LookupEditDataSource>();
+                string[] monthNames = DateTimeFormatInfo.CurrentInfo.MonthNames;
+
+                for (int i = 1; i < monthNames.Length; i++)
+                    monthDataSource.Add(new LookupEditDataSource(monthNames[i - 1], i.ToString()));
+
+                jsonData.Months = monthDataSource;
+
+                List<LookupEditDataSource> yearsDataSource = new List<LookupEditDataSource>();
+
+                int minDate = DateTime.Now.AddYears(-10).Year;
+                int maxDate = DateTime.Now.AddYears(-80).Year;
+                for (int i = 0; i < minDate - maxDate; i++)
+                    yearsDataSource.Add(new LookupEditDataSource(DateTime.Now.AddYears(-(i + 10)).Year.ToString(), DateTime.Now.AddYears(-i).Year.ToString()));
+
+                jsonData.Years = yearsDataSource;
+                jsonData.CustomerData = new Customer();
+                return jsonData;
+            }
+            catch (Exception ex)
+            {
+                return null;
             }
         }
     }

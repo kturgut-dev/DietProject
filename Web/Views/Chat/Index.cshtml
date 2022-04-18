@@ -3,114 +3,88 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container-xxl p-0">
-    <div class="row g-0">
-        <div class="col-12 d-flex">
-            <!-- Card: -->
-            <div class="card card-chat border-right border-top-0 border-bottom-0  w380">
-                <div class="px-4 py-3 py-md-4">
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control mb-1" placeholder="Ara">
-                    </div>
-                </div>
+<style>
+    .selectedUser {
+        background-color: #ddd !important;
+    }
+</style>
 
-                <div class="tab-content border-top">
-                    <div class="tab-pane fade show active" id="chat-recent" role="tabpanel">
-                        <ul id="userMessageList" class="list-unstyled list-group list-group-custom list-group-flush mb-0">
-
-                            @*    <!-- Chat Contact -->
-                                <li class="list-group-item px-md-4 py-3 py-md-4">
-                                <a href="javascript:void(0);" class="d-flex">
-                                <img class="avatar rounded" src="assets/images/xs/avatar6.svg" alt="">
-                                <div class="flex-fill ms-3 text-truncate">
-                                <h6 class="d-flex justify-content-between mb-0"><span>Vanessa Knox</span> <small class="msg-time">10:45 AM</small></h6>
-                                <span class="text-muted">There are many variations of passages</span>
-                                </div>
-                                </a>
-                                </li>*@
-
-                        </ul>
-                    </div>
-
+<div class="row g-0">
+    <div class="col-12 d-flex">
+        <!-- Card: -->
+        <div class="card card-chat border-1 border-right-0 w380 h-100">
+            <div class="px-4 py-3 py-md-4">
+                <div class="input-group mb-3">
+                    <input id="chatSearch" type="text" class="form-control mb-1" placeholder="Ara">
                 </div>
             </div>
-            <!-- Card: -->
-            <div class="card card-chat-body border-0  w-100 px-4 px-md-5 py-3 py-md-4">
 
-                <!-- Chat: Header -->
-                <div class="chat-header d-flex justify-content-between align-items-center border-bottom pb-3">
-                    <div class="d-flex align-items-center">
-                        <a href="index.html" title="Home" class="d-block d-xxl-none"><i class="icofont-arrow-left fs-4"></i></a>
-                        <a href="javascript:void(0);" title="">
-                            <img class="avatar rounded" src="assets/images/xs/avatar2.svg" alt="avatar">
-                        </a>
-                        <div class="ms-3">
-                            <h6 class="mb-0">Küraş</h6>
-                            <small class="text-muted">Last seen: 3 hours ago</small>
-                        </div>
-                    </div>
-                    <div class="d-flex">
-                        <a class="nav-link py-2 px-3 text-muted d-none d-lg-block" href="javascript:void(0);"><i class="fa fa-camera"></i></a>
-                        <a class="nav-link py-2 px-3 text-muted d-none d-lg-block" href="javascript:void(0);"><i class="fa fa-video-camera"></i></a>
-                        <a class="nav-link py-2 px-3 text-muted d-none d-lg-block" href="javascript:void(0);"><i class="fa fa-gear"></i></a>
-                        <a class="nav-link py-2 px-3 text-muted d-none d-lg-block" href="javascript:void(0);"><i class="fa fa-info-circle"></i></a>
-                        <a class="nav-link py-2 px-3 d-block d-lg-none chatlist-toggle" href="#"><i class="fa fa-bars"></i></a>
-
-                        <!-- Mobile menu -->
-                        <div class="nav-item list-inline-item d-block d-xl-none">
-                            <div class="dropdown">
-                                <a class="nav-link text-muted px-0" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fa fa-ellipsis-v"></i>
-                                </a>
-                                <ul class="dropdown-menu shadow border-0">
-                                    <li><a class="dropdown-item" href="index.html"><i class="fa fa-camera"></i> Share Images</a></li>
-                                    <li><a class="dropdown-item" href="index.html"><i class="fa fa-video-camera"></i> Video Call</a></li>
-                                    <li><a class="dropdown-item" href="index.html"><i class="fa fa-gear"></i> Settings</a></li>
-                                    <li><a class="dropdown-item" href="index.html"><i class="fa fa-info-circle"></i> Info</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Chat: body -->
-                <ul id="chatHistory" class="chat-history list-unstyled mb-0 py-lg-5 py-md-4 py-3 flex-grow-1"></ul>
-
-                <!-- Chat: Footer -->
-                <div class="chat-message">
-                    <div class="row">
-                        <div class="col-10">
-                            <textarea class="form-control" id="msgTxt" name="msgTxt" height="100" placeholder="Mesaj giriniz..."></textarea>
-                        </div>
-                        <div class="col-2">
-                            @(Html.DevExtreme().Button().Text("Gönder").ElementAttr("id","msgSend").OnClick("msgSendOnClick"))
-                        </div>
-                    </div>
-                    @*@(Html.DevExtreme().TextArea().ElementAttr("id","msgTxt").Height(100).Name("msgTxt").Placeholder("Mesaj giriniz..."))*@
+            <div class="tab-content border-top">
+                <div class="tab-pane fade show active" id="chat-recent" role="tabpanel">
+                    <ul id="userMessageList" class="list-unstyled list-group list-group-custom list-group-flush mb-0">
+                    </ul>
                 </div>
 
             </div>
         </div>
-    </div> <!-- row end -->
-</div>
+        <!-- Card: -->
+        <div id="chat" class="card card-chat-body border-1 w-100 px-4 px-md-5 py-3 py-md-4" style="display: none;">
 
-@section Scripts{
+            <!-- Chat: Header -->
+            <div class="chat-header d-flex justify-content-between align-items-center border-bottom pb-3">
+                <div class="d-flex align-items-center">
+                    @*<a href="index.html" title="Home" class="d-block d-xxl-none"><i class="icofont-arrow-left fs-4"></i></a>*@
+                    <div class="ms-3">
+                        <h6 id="userFullName" class="mb-0"></h6>
+                        <small style="display:none;" class="text-muted">Son Görülme: <span id="userLastSeenDate"></span></small>
+                    </div>
+                </div>
+                <div class="d-flex">
+                    <a class="nav-link py-2 px-3 text-muted d-none d-lg-block" href="javascript:void(0);"><i class="fa fa-gear"></i></a>
+                    <a class="nav-link py-2 px-3 text-muted d-none d-lg-block" href="javascript:void(0);"><i class="fa fa-user-circle"></i></a>
+                    <a class="nav-link py-2 px-3 d-block d-lg-none chatlist-toggle" href="#"><i class="fa fa-bars"></i></a>
 
-<scipt type="text/html" id="userTemplate">
-    <li class="list-group-item px-md-4 py-3 py-md-4">
-        <a href="javascript:void(0);" class="d-flex">
-            <img class="avatar rounded" src="assets/images/xs/avatar6.svg" alt="">
-            <div class="flex-fill ms-3 text-truncate">
-                <h6 class="d-flex justify-content-between mb-0">
-                    <span data-content="FullName">${FullName}</span>
-                    <small class="msg-time" data-content="LastMessageDate"></small>
-                </h6>
-                <span class="text-muted" data-content="LastMessage"></span>
+                    <!-- Mobile menu -->
+                    <div class="nav-item list-inline-item d-block d-xl-none">
+                        <div class="dropdown">
+                            <a class="nav-link text-muted px-0" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-ellipsis-v"></i>
+                            </a>
+                            <ul class="dropdown-menu shadow border-0">
+                                <li><a class="dropdown-item" href="index.html"><i class="fa fa-camera"></i> Share Images</a></li>
+                                <li><a class="dropdown-item" href="index.html"><i class="fa fa-video-camera"></i> Video Call</a></li>
+                                <li><a class="dropdown-item" href="index.html"><i class="fa fa-gear"></i> Settings</a></li>
+                                <li><a class="dropdown-item" href="index.html"><i class="fa fa-info-circle"></i> Info</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </a>
-    </li>
-</scipt>
 
+            <!-- Chat: body -->
+            <ul id="chatHistory" class="chat-history list-unstyled mb-0 py-lg-5 py-md-4 py-3 flex-grow-1"></ul>
+
+            <!-- Chat: Footer -->
+            <div class="chat-message">
+                <div class="row">
+                    <div class="col-10">
+                        <textarea class="form-control" id="msgTxt" name="msgTxt" height="100" placeholder="Mesaj giriniz..."></textarea>
+                    </div>
+                    <div class="col-2">
+                        @(Html.DevExtreme().Button().Text("Gönder").ElementAttr("id","msgSend").OnClick("msgSendOnClick"))
+                    </div>
+                </div>
+                @*@(Html.DevExtreme().TextArea().ElementAttr("id","msgTxt").Height(100).Name("msgTxt").Placeholder("Mesaj giriniz..."))*@
+            </div>
+
+        </div>
+
+        <div id="emptyChat" class="card card-chat-body w-100 px-4 px-md-5 py-3 py-md-4 border-1 d-flex justify-content-center text-center">
+            <p>Sohbet platformuna hoşgeldiniz sohbet başlatmak için diyetisyenlerimizle iletişim kurunuz ya da mevcut olan sohbetinize tıklayabilirsiniz.</p>
+        </div>
+    </div>
+</div> <!-- row end -->
+@section Scripts{
 <script src="~/js/jquery-template/dist/jquery.loadTemplate.js"></script>
 <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
 <script src="~/js/socket.js"></script>

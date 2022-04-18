@@ -20,9 +20,8 @@ namespace DietProject.Business.Validations
                 .NotNull().WithMessage("Boy kısmı boş olamaz.")
                 .LessThanOrEqualTo(50).WithMessage("Boyunuz en az 50cm olmalıdır.");
 
-            RuleFor(x => x.BirthDate)
-                .NotNull().WithMessage("Doğum tarihi kısmı boş olamaz.")
-                .GreaterThanOrEqualTo(DateTime.Today.AddYears(-10)).WithMessage("10 yaşından küçük danışanlar kabul edilmemektedir.");
+            RuleFor(x => x.BirthYear)
+                .GreaterThanOrEqualTo(DateTime.Today.AddYears(-10).Year).WithMessage("10 yaşından küçük danışanlar kabul edilmemektedir.");
 
             RuleFor(x => x.AllergenicFood)
                .NotEmpty().WithMessage("Alerjik besinler kısmı boş olamaz.")

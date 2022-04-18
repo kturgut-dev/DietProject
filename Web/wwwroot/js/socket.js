@@ -3,6 +3,8 @@ var connection = new signalR.HubConnectionBuilder()
     .configureLogging(signalR.LogLevel.None)
     .withUrl("/chatHub").build();
 let userList = [];
+let currentMsgList = [];
+let selectedUserId = null;
 
 async function start() {
     try {
@@ -16,16 +18,25 @@ async function start() {
 
 start();
 
-
-connection.on("receiveMessage", function (senderUserId, message) {
-    console.log(message);
+connection.on("receivemessage", function (message) {
+    currentMsgList.push(message);
+    fillMessges();
 });
 
 
-function SendMessage(msg) {
-    connection.invoke("SendMessage", user, message).catch(function (err) {
-        return console.error(err.toString());
-    });
+function SendMessage(user, msg) {
+    axios.post('/Chat/SendMessageUser', { UserID: user, Message: msg })
+        .then(res => {
+            //console.log(res)
+        })
+        .catch(err => {
+            console.error(err)
+        })
+
+    $("#msgTxt").val('');
+    //connection.invoke("sendmessage", user, msg).catch(function (err) {
+    //    return console.error(err.toString());
+    //});
 }
 
 function userListFill() {
@@ -43,13 +54,28 @@ function userListFill() {
     //});
 }
 
+$('#chatSearch').on('input', function () {
+    if ($('#chatSearch').val().length > 0)
+        $("#userMessageList li").each(function () {
+            if ($(this).attr('data-fullName').toLowerCase().indexOf($('#chatSearch').val().toLowerCase()) < 0) {
+                $(this).hide();
+            } else {
+                $(this).show()
+            }
+        });
+    else
+        $("#userMessageList li").each(function () {
+            $(this).show()
+        });
+});
+
 function userListAdd() {
 
     userList.forEach(element => {
 
-        const formatedUser = '<li onclick="clickUserShowMessages(' + element.Id + ')" class="list-group-item px-md-4 py-3 py-md-4 userChatList">' +
+        const formatedUser = '<li data-id="' + element.Id + '" data-fullname="' + element.FullName + '" onclick="clickUserShowMessages(' + element.Id + ')" class="list-group-item px-md-4 py-3 py-md-4 userMsgItem">' +
             '<a href="javascript:void(0);" class="d-flex">' +
-            '<img class="avatar rounded" src="assets/images/xs/avatar6.svg" alt="">' +
+            //'<img class="avatar rounded" src="assets/images/xs/avatar6.svg" alt="">' +
             '<div class="flex-fill ms-3 text-truncate">' +
             '<h6 class="d-flex justify-content-between mb-0">' +
             '<span data-content="FullName">' + element.FullName + '</span>' +
@@ -64,14 +90,37 @@ function userListAdd() {
 
 }
 
+$("#userMessageList").on("click", ".userMsgItem", function (event) {
+    $("#userMessageList li").each(function () {
+        $(this).removeClass('selectedUser')
+    });
+    $(this).addClass('selectedUser');
+});
+
+function fillMessges() {
+    $('#chatHistory').empty();
+
+    //let entries = Object.entries(currentMsgList);
+    //let capsEntries = entries.map((entry) => [entry[0][0].toUpperCase() + entry[0].slice(1), entry[1]]);
+    //let capsPopulations = Object.fromEntries(capsEntries);
+    //console.log(capsPopulations);
+
+    currentMsgList.forEach(element => {
+        appendMessages(element);
+    })
+}
+
 function clickUserShowMessages(id) {
-    $('#chatHistory').empty()
+    $('#emptyChat').attr('style', 'display: none !important;');
+    $('#chat').attr('style', '');
+
+    selectedUserId = id;
 
     axios.get("/chat/GetChatHistory/" + id)
         .then(res => {
-            res.data.forEach(element => {
-                appendMessages(element)
-            })
+            currentMsgList = res.data.messages;
+            fillMessges();
+            $('#userFullName').text(res.data.userData.fullName);
         })
         .catch(err => {
             console.error(err);
@@ -80,14 +129,14 @@ function clickUserShowMessages(id) {
 }
 
 function appendMessages(message) {
-    var message = '<li class="mb-3 d-flex ' + (message.IsLeft == false ? 'flex-row' : 'flex-row-reverse') + ' align-items-end">' +
+    var message = '<li data-message-id="' + message.iD + '" class="mb-3 d-flex ' + (message.isLeft == true ? 'flex-row' : 'flex-row-reverse') + ' align-items-end">' +
         '<div class="max-width-70" >' +
         '<div class="user-info mb-1">' +
-        '<img class="avatar sm rounded-circle me-1" src="assets/images/xs/avatar2.svg" alt="avatar">' +
-        '<span class="text-muted small">10:10 AM, Today</span>' +
+        //'<img class="avatar sm rounded-circle me-1" src="assets/images/xs/avatar2.svg" alt="avatar">' +
+        '<span class="text-muted small">' + message.lastMessageDate + '</span>' +
         '</div>' +
         '<div class="card border-0 p-3 ">' +
-        '<div class="message"> ' + message.LastMessage + '</div>' +
+        '<div class="message">' + message.lastMessage + '</div>' +
         '</div></div></li >'
 
     $("#chatHistory").append(message);
@@ -96,10 +145,9 @@ function appendMessages(message) {
 
 
 function msgSendOnClick() {
-
-
-
-    alert("send msg click");
+    const msg = $("#msgTxt").val();
+    if (selectedUserId != null)
+        SendMessage(selectedUserId, msg);
 }
 
 userListFill();

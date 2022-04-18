@@ -35,6 +35,15 @@ namespace Web
                     options.RegisterValidatorsFromAssemblyContaining<Startup>();
                 });
 
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.WithOrigins("http://localhost:55867/")
+                        .AllowCredentials();
+                });
+            });
+
             services.AddTransient<IValidator<User>, UsersValidation>();
 
             services.AddDbContextFactory<DietProjectContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DietProject")));
@@ -70,6 +79,7 @@ namespace Web
 
             app.UseAuth();
 
+            app.UseCors();
 
             app.UseEndpoints(endpoints =>
             {
