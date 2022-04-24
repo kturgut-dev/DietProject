@@ -1,5 +1,7 @@
-﻿using DietProject.Core.DataAccess;
+﻿using DietProject.Business.Validations;
+using DietProject.Core.DataAccess;
 using DietProject.Core.Entities;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,10 +21,12 @@ namespace Web.Controllers
     {
         private IHostingEnvironment Environment;
         private DietitianOperations _dietitianOperations;
+        private CustomerOperations _CustomerOperations;
         public WelcomeController(IHostingEnvironment _environment, IDbContextFactory<DietProjectContext> contextFactory)
         {
             Environment = _environment;
             _dietitianOperations = new DietitianOperations(contextFactory);
+            _CustomerOperations = new CustomerOperations(contextFactory);
         }
         public IActionResult Index()
         {
@@ -39,7 +43,36 @@ namespace Web.Controllers
         [HttpPost]
         public IActionResult Customer(Customer submitData)
         {
-            return View();
+            CustomerValidation customerValidation = new CustomerValidation();
+            ValidationResult validRes = customerValidation.Validate(submitData);
+            if (!validRes.IsValid)
+            {
+                List<string> errors = new List<string>();
+
+                foreach (var err in validRes.Errors)
+                {
+                    errors.Add(String.Format("<p>{0}</p>", err.ErrorMessage));
+                }
+
+                return Ok(new
+                {
+                    IsSuccess = false,
+                    Message = "Lütfen formu eksiksiz doldurunuz.",
+                    RedirectUrl = "/Welcome/Customer",
+                    Errors = errors
+                });
+            }
+
+            Helpers.ClaimHelper.SetUserIdentity(User.Identity);
+            submitData.UserID = Helpers.ClaimHelper.UserID;
+            bool res = _CustomerOperations.Add(submitData);
+            return Ok(new
+            {
+                IsSuccess = res,
+                Message = res ? "Üyelik işlemleriniz başarıyla tamamlanmıştır, yönlendiriliyorsunuz." : "Bir hata oluştu.",
+                RedirectUrl = "/",
+                Errors = new List<string>()
+            });
         }
 
         public IActionResult Dietitian()

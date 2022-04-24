@@ -11,7 +11,6 @@
 }
 
 @model DateLookupDataSource;
-
 <style>
     * {
         margin: 0;
@@ -24,7 +23,7 @@
 
     #grad1 {
         /*background-color: : #9C27B0;
-                                                                                                                    background-image: linear-gradient(120deg, #FF4081, #81D4FA)*/
+                                                                                                                                            background-image: linear-gradient(120deg, #FF4081, #81D4FA)*/
         border: 1px solid #ddd;
     }
 
@@ -175,20 +174,25 @@
 
         #progressbar #age:before {
             font-family: FontAwesome;
-            content: "\f023"
+            content: "\f073"
         }
 
         #progressbar #boyandkilo:before {
             font-family: FontAwesome;
-            content: "\f007"
+            content: "\f184"
         }
 
         #progressbar #alergenicfoods:before {
             font-family: FontAwesome;
-            content: "\f09d"
+            content: "\f0f5"
         }
 
         #progressbar #goals:before {
+            font-family: FontAwesome;
+            content: "\f18e"
+        }
+
+        #progressbar #doneForm:before {
             font-family: FontAwesome;
             content: "\f00c"
         }
@@ -256,8 +260,9 @@
 <!-- MultiStep Form -->
 <div class="container-fluid" id="grad1">
     <div class="row justify-content-center mt-0">
-        <div class="col-11 col-sm-9 col-md-7 col-lg-6 text-center p-0 mt-3 mb-2">
+        <div class="col-12 col-sm-9 col-md-7 col-lg-6 text-center p-0 mt-3 mb-2">
             <div class="card px-0 pt-4 pb-0 mt-3 mb-3">
+                <div class="alert alert-danger" id="errs"></div>
                 <h2><strong>Hoşgeldiniz</strong></h2>
                 <p>Lütfen hesap kurulumunuzu tamamlayınız.</p>
                 <div class="row">
@@ -265,7 +270,7 @@
                         <form id="msform" method="post" action=@Url.ActionLink("Customer","Welcome")>
                             <!-- progressbar -->
                             <ul id="progressbar">
-                                <li class="active" id="age"><strong>Yaş</strong></li>
+                                <li class="active" id="age"><strong>Doğum Tarihi</strong></li>
                                 <li id="boyandkilo"><strong>Boy /Kilo</strong></li>
                                 <li id="alergenicfoods"><strong>Alerjenler</strong></li>
                                 <li id="goals"><strong>Hedef</strong></li>
@@ -285,7 +290,7 @@
                                         </div>
                                         <div class="col-4">
                                             @(Html.DevExtreme()
-                                           .Lookup()
+                                            .Lookup()
                                             .DataSource(Model.Months)
                                             .DisplayExpr("Display")
                                             .ValueExpr("Value")
@@ -316,7 +321,7 @@
                                             .Min(100)
                                             .Max(220)
                                             .Value(150)
-                                            .Name("Boy")
+                                            .Name("Height")
                                             .ShowSpinButtons(true)
                                             .Label("Boy"))
                                         </div>
@@ -326,7 +331,7 @@
                                             .Min(25)
                                             .Max(500)
                                             .Value(75)
-                                            .Name("Kilo")
+                                            .Name("Weight")
                                             .ShowSpinButtons(true)
                                             .Label("Kilo"))
                                         </div>
@@ -362,8 +367,9 @@
                                     </div>
                                 </div>
                                 <input type="button" name="previous" class="previous btn btn-secondary text-white p-3 rounded" value="Önceki Adım" />
-                                <input type="submit" name="next" class="btn btn-primary text-white p-3 rounded finishForm" value="Bitir" />
+                                <input type="submit" id="doneFormAndSubmitfunc" name="next" class="btn btn-primary text-white p-3 rounded finishForm" value="Bitir" />
                             </fieldset>
+
                         </form>
                     </div>
                 </div>
@@ -372,13 +378,14 @@
     </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js" integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
-        $(document).ready(function(){
+         $(document).ready(function() {
 
     var current_fs, next_fs, previous_fs; //fieldsets
     var opacity;
 
-    $(".next").click(function(){
+    $(".next").click(function() {
 
         current_fs = $(this).parent();
         next_fs = $(this).parent().next();
@@ -389,26 +396,26 @@
         //show the next fieldset
         next_fs.show();
         //hide the current fieldset with style
-        current_fs.animate({opacity: 0}, {
-        step: function(now) {
-        // for making fielset appear animation
-        opacity = 1 - now;
+        current_fs.animate({
+            opacity: 0
+        }, {
+            step: function(now) {
+                // for making fielset appear animation
+                opacity = 1 - now;
 
-        current_fs.css({
-        'display': 'none',
-        'position': 'relative'
-        });
-        next_fs.css({'opacity': opacity});
-        },
-        duration: 600
+                current_fs.css({
+                    'display': 'none',
+                    'position': 'relative'
+                });
+                next_fs.css({
+                    'opacity': opacity
+                });
+            },
+            duration: 600
         });
     });
 
-     //$(".finishForm").click(function(){
-     //   alert('formunuz tamamlandı')
-     //})
-
-    $(".previous").click(function(){
+    $(".previous").click(function() {
 
         current_fs = $(this).parent();
         previous_fs = $(this).parent().prev();
@@ -420,29 +427,72 @@
         previous_fs.show();
 
         //hide the current fieldset with style
-        current_fs.animate({opacity: 0}, {
-        step: function(now) {
-        // for making fielset appear animation
-        opacity = 1 - now;
+        current_fs.animate({
+            opacity: 0
+        }, {
+            step: function(now) {
+                // for making fielset appear animation
+                opacity = 1 - now;
 
-        current_fs.css({
-        'display': 'none',
-        'position': 'relative'
-        });
-        previous_fs.css({'opacity': opacity});
-        },
-        duration: 600
+                current_fs.css({
+                    'display': 'none',
+                    'position': 'relative'
+                });
+                previous_fs.css({
+                    'opacity': opacity
+                });
+            },
+            duration: 600
         });
     });
 
-    $('.radio-group .radio').click(function(){
+    $('.radio-group .radio').click(function() {
         $(this).parent().find('.radio').removeClass('selected');
         $(this).addClass('selected');
     });
 
-    $(".submit").click(function(){
-        return false;
-    })
 
+    $("form").on("submit", function(event) {
+
+        event.preventDefault();
+        var serializedData = $(this).serialize();
+        axios.post('@Url.ActionLink("Customer","Welcome")', serializedData)
+            .then(res => {
+                console.log(res.data)
+
+                if (res.data.IsSuccess) {
+
+                    let timerInterval
+                    Swal.fire({
+                        title: 'Teşekkür ederiz!',
+                        html: res.data.Message,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        didOpen: () => {
+                            Swal.showLoading()
+                            //const b = Swal.getHtmlContainer().querySelector('b')
+                            timerInterval = setInterval(() => {
+                                //b.textContent = Swal.getTimerLeft()
+                            }, 100)
+                        },
+                        willClose: () => {
+                            clearInterval(timerInterval)
+                        }
+                    }).then((result) => {
+                        /* Read more about handling dismissals below */
+                        if (result.dismiss === Swal.DismissReason.timer) {
+                            window.location.href = res.data.RedirectUrl;
+                        }
+                    })
+
+                }else{
+                    $( "#errs" ).html("");
+                    $( "#errs" ).html( res.data.Errors);
+                }
+
+
+            });
     });
+
+});
 </script>
