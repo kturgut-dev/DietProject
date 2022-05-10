@@ -15,7 +15,7 @@
     @* Uncomment to use the HtmlEditor control *@
     @* <script src="https://unpkg.com/devextreme-quill@21_2/dist/dx-quill.min.js"></script> *@
 
-     <link href="~/css/devextreme/dx.light.css" rel="stylesheet" />
+    <link href="~/css/devextreme/dx.light.css" rel="stylesheet" />
 
     @*<script src="~/js/devextreme/dx.all.js"></script>*@
 
@@ -58,7 +58,13 @@
                         </a>
                     </li>
 
-                     <li>
+                    <li>
+                        <a class="m-link" href="@Url.Action("Portal","Dietitians")">
+                            <i class="icofont-ui-home"></i><span>Portal</span>
+                        </a>
+                    </li>
+
+                    <li>
                         <a class="m-link" href="@Url.Action("Index","Chat")">
                             <i class="icofont-ui-home"></i><span>Sohbet</span>
                         </a>
@@ -331,7 +337,7 @@
     <!-- Jquery Page Js -->
     @*<script src="~/assets/js/template.js"></script>*@
 
-     @RenderSection("Scripts", required: false)
+    @RenderSection("Scripts", required: false)
 </body>
 
 </html>

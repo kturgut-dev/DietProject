@@ -1,5 +1,5 @@
-﻿using DietProject.Core.Entities;
-using ContosoUniversity.Models;
+﻿using Core.Entities.Abstract;
+using DietProject.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace DietProject.Core.DataAccess
@@ -33,5 +33,6 @@ namespace DietProject.Core.DataAccess
         public DbSet<Food> Foods { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<DietitianViewData> DietitianViewData { get; set; }
     }
 }

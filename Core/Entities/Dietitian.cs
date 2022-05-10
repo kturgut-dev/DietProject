@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DietProject.Core.Entities
 {
@@ -15,5 +11,6 @@ namespace DietProject.Core.Entities
         public double? MonthlyPrice { get; set; }
         public string CertificatePath { get; set; }
         public string Bio { get; set; }
+
     }
 }

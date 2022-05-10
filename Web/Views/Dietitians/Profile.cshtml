@@ -1,0 +1,320 @@
+﻿@using Core.Entities.Abstract
+@using System.Security.Claims
+@using DevExtreme.AspNet.Mvc
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model DietitianDTO
+
+<style>
+
+
+    .card-white .card-heading {
+        color: #333;
+        background-color: #fff;
+        border-color: #ddd;
+        border: 1px solid #dddddd;
+    }
+
+    .card-white .card-footer {
+        background-color: #fff;
+        border-color: #ddd;
+    }
+
+    .card-white .h5 {
+        font-size: 14px;
+        //font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    }
+
+    .card-white .time {
+        font-size: 12px;
+        //font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    }
+
+    .post .post-heading {
+        height: 95px;
+        padding: 20px 15px;
+    }
+
+        .post .post-heading .avatar {
+            width: 60px;
+            height: 60px;
+            display: block;
+            margin-right: 15px;
+        }
+
+        .post .post-heading .meta .title {
+            margin-bottom: 0;
+        }
+
+            .post .post-heading .meta .title a {
+                color: black;
+            }
+
+                .post .post-heading .meta .title a:hover {
+                    color: #aaaaaa;
+                }
+
+        .post .post-heading .meta .time {
+            margin-top: 8px;
+            color: #999;
+        }
+
+    .post .post-image .image {
+        width: 100%;
+        height: auto;
+    }
+
+    .post .post-description {
+        padding: 15px;
+    }
+
+        .post .post-description p {
+            font-size: 14px;
+        }
+
+        .post .post-description .stats {
+            margin-top: 20px;
+        }
+
+            .post .post-description .stats .stat-item {
+                display: inline-block;
+                margin-right: 15px;
+            }
+
+                .post .post-description .stats .stat-item .icon {
+                    margin-right: 8px;
+                }
+
+    .post .post-footer {
+        border-top: 1px solid #ddd;
+        padding: 15px;
+    }
+
+        .post .post-footer .input-group-addon a {
+            color: #454545;
+        }
+
+        .post .post-footer .comments-list {
+            padding: 0;
+            margin-top: 20px;
+            list-style-type: none;
+        }
+
+            .post .post-footer .comments-list .comment {
+                display: block;
+                width: 100%;
+                margin: 20px 0;
+            }
+
+                .post .post-footer .comments-list .comment .avatar {
+                    width: 35px;
+                    height: 35px;
+                }
+
+                .post .post-footer .comments-list .comment .comment-heading {
+                    display: block;
+                    width: 100%;
+                }
+
+                    .post .post-footer .comments-list .comment .comment-heading .user {
+                        font-size: 14px;
+                        font-weight: bold;
+                        display: inline;
+                        margin-top: 0;
+                        margin-right: 10px;
+                    }
+
+                    .post .post-footer .comments-list .comment .comment-heading .time {
+                        font-size: 12px;
+                        color: #aaa;
+                        margin-top: 0;
+                        display: inline;
+                    }
+
+                .post .post-footer .comments-list .comment .comment-body {
+                    margin-left: 50px;
+                }
+
+                .post .post-footer .comments-list .comment > .comments-list {
+                    margin-left: 50px;
+                }
+</style>
+<div class="row align-items-center">
+    <div class="border-0 mb-4">
+        <div class="card-header py-3 no-bg bg-transparent d-flex align-items-center px-0 justify-content-between border-bottom flex-wrap">
+            <h3 class="fw-bold mb-0">@Model.UserData.FullName</h3>
+        </div>
+    </div>
+</div> <!-- Row end  -->
+<div class="row g-3 mb-xl-3  justify-content-end">
+    <div class="col-xl-4 col-lg-5 col-md-12">
+        <div class="card profile-card flex-column mb-3">
+            <div class="card-header py-3 d-flex justify-content-between bg-transparent border-bottom-0">
+                <h6 class="mb-0 fw-bold ">Diyetisyen Profil</h6>
+            </div>
+            <div class="card-body d-flex profile-fulldeatil flex-column">
+                <div class="profile-info w-100">
+                    <div class="row justify-content-center">
+                        <div class="col-4">
+                            <img src="@Model.UserData.Avatar" alt="@Model.UserData.Avatar" class="avatar xl img-thumbnail shadow-sm">
+                        </div>
+                        <div class="col-12">
+                            <h6 class="mb-0 mt-2 ml-0 mr-0  fw-bold d-block fs-6 text-center">@Model.UserData.FullName</h6>
+                        </div>
+                    </div>
+                    @*<span class="text-muted small">ID : @Model.UserData.ID</span>*@
+
+                    <div class="row g-2 pt-2">
+                        <div class="col-xl-12">
+                            <div class="d-flex align-items-center">
+                                <i class="icofont-price"></i>
+                                <span class="ms-2">@Model.DietitianData.MonthlyPrice ₺</span>
+                            </div>
+                        </div>
+                        <div class="col-xl-12">
+                            <div class="d-flex align-items-center">
+                                <i class="icofont-email"></i>
+                                <span class="ms-2">@Model.UserData.EPosta</span>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-12">
+                            <div class="d-flex align-items-center">
+                                <i class="icofont-address-book"></i>
+                                <span class="ms-2">@Model.DietitianData.CityName</span>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-12">
+                            <div class="d-flex">
+                                <a href="/Chat/?uId=@Model.UserData.ID" class="btn btn-outline-primary btn-block mt-2"> Sohbete Başla</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xxl-12 col-xl-8 col-lg-7 col-md-12">
+        <div class="row">
+            <!--  g-3 mb-3 row-cols-1 row-cols-md-1 row-cols-lg-2 row-deck -->
+            <div class="col">
+                <div class="card auth-detailblock full-height">
+                    <div class="card-header py-3 d-flex justify-content-between bg-transparent border-bottom-0">
+                        <h6 class="mb-0 fw-bold ">Bio</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <p class="mt-3">@Model.DietitianData.Bio</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xxl-8 col-xl-8 col-lg-8 col-md-12 ">
+        <div class="card border p-3 mb-3">
+            <form class="form" method="post" id="commentForm" action="/Comment/Create/@Model.DietitianData.ID">
+                <div class="form-group">
+                    <label>Skor</label>
+                    <select class="form-control" name="score" id="txt_Score">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                      <label >Yorum</label>
+
+            <textarea class="form-control" id="txt_Comment" rows="7"></textarea>
+                </div>
+                <button class="btn btn-primary float-right" type="button" onclick="sendCommentForm()">Gönder</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <div class="card-header py-3 d-flex justify-content-between bg-transparent border-bottom-0">
+                <h6 class="mb-0 fw-bold ">Yorumlar</h6>
+            </div>
+            <!-- https://bootsnipp.com/snippets/exz9y -->
+            <div id="comments" class="p-2">
+            </div>
+            <div class="alert alert-danger p-3" id="no-comment-alert-card"> Henüz yorum yapılmamış.</div>
+        </div>
+    </div>
+</div><!-- Row end  -->
+
+
+<script>
+
+    const commentGetURLAddress = '/Comment/Dietitian/GetAll/@(Model.DietitianData.ID)';
+    function txt_Score_getSelectValue()
+        {
+           return document.getElementById("txt_Score").value;
+            
+        }
+
+    function loadComments(){
+         axios.get(commentGetURLAddress)
+        .then(res=>{
+            console.log(res.data);
+             $( "#comments" ).html('');
+            if(res.data.IsSuccsss)
+               {
+                   $( "#no-comment-alert-card" ).remove();
+                   res.data.Comments.forEach(function(comment){
+                       let score = '';
+                       for (let i = 0; i < comment.Score; i++) {
+                                         score+=  '<i class="icofont-star"></i>';
+                                        }
+
+                       let commentTemplate = ' <div class="card card-white mt-1 post" data-id="' +comment.DataId +'">'+
+                                '<div class="post-heading">'+
+                                   '<div class="float-left image">'+
+                                       ' <img src="' +comment.UserData.Avatar +'" class="img-circle avatar" alt="' +comment.UserData.FullName +'">'+
+                                   ' </div>'+
+                                    '<div class="float-left meta">'+
+                                       ' <div class="title h5">'+
+                                           ' <a href="#"><b>' +comment.UserData.FullName +'</b></a>'+
+                                            ' <span class="text-muted time">' +comment.Date +'</span>'+
+                                      '  </div>'+
+                                      score +
+                                       '<div>'+
+
+                                            '</div>'+
+                                  '  </div>'+
+                               ' </div>'+
+                               ' <div class="post-description">'+
+                                    '<p>' +comment.Text +'</p>'+
+                                '</div>'+
+                            '</div>';
+
+                            $('#comments').append(commentTemplate);
+                    });
+               }
+        })
+    }
+
+    function sendCommentForm(){
+        var datastring = $("#commentForm").serialize();
+        console.log(datastring);
+
+        axios.post('/Comment/Create/@Model.DietitianData.ID',{
+            comment: $("#txt_Comment").val(),
+            score:txt_Score_getSelectValue()
+        })
+        .then(res=>{
+            console.log(res)
+            
+            loadComments();
+        })
+    }
+
+    $(document).ready(function () {
+        loadComments();
+    });
+
+</script>

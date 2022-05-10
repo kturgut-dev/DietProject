@@ -41,6 +41,36 @@ namespace Web.Controllers
             return View(result);
         }
 
+        [HttpGet("/portal")]
+        public ActionResult Portal([FromQuery(Name = "city")] string[] city, [FromQuery(Name = "minPrice")] int? minPrice,
+            [FromQuery(Name = "maxPrice")] int? maxPrice, [FromQuery(Name = "star")] int[] stars)
+        {
+            List<DietitianViewData> dietitansViewData = _dietitianOperations.GetAllDietitians(city, minPrice, maxPrice, stars);
+
+            return View(dietitansViewData);
+        }
+
+        [HttpGet("/Profile/{userId}")]
+        public ActionResult Profile(string userId)
+        {
+            User userData = _userOperations.Get(x => x.ID == Convert.ToInt64(userId));
+
+            if (userData == null)
+                return RedirectToAction(nameof(Index));
+
+            Dietitian result = _dietitianOperations.Get(x => x.UserID == userData.ID);
+            if (result == null)
+                return RedirectToAction(nameof(Index));
+
+            DietProject.Core.Entities.User resultUser = _userOperations.Get(x => x.ID == result.UserID);
+
+            DietitianDTO res = new DietitianDTO();
+            res.UserData = userData;
+            res.DietitianData = result;
+
+            return View(res);
+        }
+
         // GET: DietitiansController/Details/5
         public ActionResult Details(Int64 id)
         {
@@ -56,6 +86,8 @@ namespace Web.Controllers
 
             return View(res);
         }
+
+
         public ActionResult Approve(Int64 id)
         {
             Dietitian result = _dietitianOperations.Get(x => x.ID == id);
