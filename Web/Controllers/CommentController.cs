@@ -1,7 +1,6 @@
 ﻿using DietProject.Core.DataAccess;
 using DietProject.Core.Entities;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -58,26 +57,32 @@ namespace Web.Controllers
             }
         }
 
-        [HttpPost("/Comment/Create/{dietitianId}")]
-        public ActionResult Create(Int64 dietitianId, IFormCollection collection)
+        [HttpPost("/Comment/Create")]
+        public ActionResult Create(Int64 dietitianId, string comment, int score)
         {
             try
             {
                 ClaimHelper.SetUserIdentity(User.Identity);
 
+                if (string.IsNullOrEmpty(comment.Trim()))
+                    throw new Exception("Yorum boş bırakılamaz.");
+
+                if (score == 0)
+                    throw new Exception("Skor 0'dan büyük olmalıdır.");
+
                 Comment _comment = new Comment();
                 _comment.DietitianID = dietitianId;
                 _comment.CommentDate = DateTime.Now;
-                _comment.CommentText = collection["comment"];//bu deger gelmıor kontrol et
-                _comment.Score = Convert.ToInt32(collection["score"]);
+                _comment.CommentText = comment;//bu deger gelmıor kontrol et
+                _comment.Score = Convert.ToInt32(score);
                 _comment.CustomerID = _customerOperations.Get(x => x.UserID == ClaimHelper.UserID).ID;
 
                 bool isSuccesss = _dietitianOperations.Add(_comment);
                 return Ok(new { IsSuccsss = isSuccesss, Message = isSuccesss ? "Yorumunuz başarıyla kaydedildi." : "Yorumunuz kaydedilirken bir sorun oluştu." });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return Ok(new { IsSuccsss = true, Message = "Yorumunuz başarıyla kaydedildi." });
+                return Ok(new { IsSuccsss = false, Message = ex.Message });
             }
         }
 

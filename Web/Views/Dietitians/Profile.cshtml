@@ -215,24 +215,27 @@
     </div>
     <div class="col-xxl-8 col-xl-8 col-lg-8 col-md-12 ">
         <div class="card border p-3 mb-3">
-            <form class="form" method="post" id="commentForm" action="/Comment/Create/@Model.DietitianData.ID">
-                <div class="form-group">
-                    <label>Skor</label>
-                    <select class="form-control" name="score" id="txt_Score">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                      <label >Yorum</label>
+            <div class="card-header border-bottom"><h5 class="card-title">Yorum Yap</h5></div>
+            <div class="card-body">
+                <form class="form" method="post" id="commentForm" action="/Comment/Create/@Model.DietitianData.ID">
+                    <div class="form-group">
+                        <label>Skor</label>
+                        <select class="form-control" name="score" id="txt_Score">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Yorum</label>
 
-            <textarea class="form-control" id="txt_Comment" rows="7"></textarea>
-                </div>
-                <button class="btn btn-primary float-right" type="button" onclick="sendCommentForm()">Gönder</button>
-            </form>
+                        <textarea class="form-control" id="txt_Comment" rows="7"></textarea>
+                    </div>
+                    <button class="btn btn-primary float-right" type="button" onclick="sendCommentForm()">Gönder</button>
+                </form>
+            </div>
         </div>
 
         <div class="card">
@@ -254,7 +257,7 @@
     function txt_Score_getSelectValue()
         {
            return document.getElementById("txt_Score").value;
-            
+
         }
 
     function loadComments(){
@@ -302,13 +305,22 @@
         var datastring = $("#commentForm").serialize();
         console.log(datastring);
 
-        axios.post('/Comment/Create/@Model.DietitianData.ID',{
+        axios.post('/Comment/Create',{
             comment: $("#txt_Comment").val(),
-            score:txt_Score_getSelectValue()
+            score: txt_Score_getSelectValue(),
+            dietitianId: @(Model.DietitianData.ID)
         })
         .then(res=>{
             console.log(res)
-            
+            Swal.fire(
+              'Bildirim',
+              res.data.Message,
+             res.data.IsSuccsss ?  'success' : 'error'
+            )
+            if(res.data.IsSuccsss){
+                 $('#txt_Score').val('');
+                  $('#txt_Comment').val('');
+            }
             loadComments();
         })
     }
