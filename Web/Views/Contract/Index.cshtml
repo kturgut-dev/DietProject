@@ -1,0 +1,61 @@
+﻿@using DevExtreme.AspNet.Mvc
+@using DietProject.Core.Entities
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model IList<Contract>
+
+<div class="row align-items-center">
+    <div class="border-0 mb-4">
+        <div class="card-header py-3 no-bg bg-transparent d-flex align-items-center px-0 justify-content-between border-bottom flex-wrap">
+            <h3 class="fw-bold mb-0">Teklifler</h3>
+        </div>
+    </div>
+</div>
+<div class="row align-item-center">
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Teklif Sahibi</th>
+                            <th scope="col">Fiyat</th>
+                            <th scope="col">Başlangıç Tarihi</th>
+                            <th scope="col">Bitiş Tarihi</th>
+                            <th scope="col">İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (Contract row in Model)
+                        {
+                            <tr>
+                                <th scope="row">@(row.ID)</th>
+                                <td><a href="/Profile/@(row.DietitianData.ID)">@(row.UserDietitianData.FullName)</a></td>
+                                <td>@(row.ContractPrice)₺</td>
+                                <td>@(row.ContractStartDate.ToString("dd.MM.yyyy"))</td>
+                                <td>@(row.ContractEndDate.ToString("dd.MM.yyyy"))</td>
+                                <td>
+                                    @if (row.IsApproved == false)
+                                    {
+                                        <a class="btn btn-primary" 
+                                        href="/Contract/Approve?cId=@(row.ID)&approve=1">Onayla</a>
+                                        <a class="btn btn-danger" 
+                                         href="/Contract/Approve?cId=@(row.ID)&approve=0">Ret Et</a>
+                                    }
+                                    else
+                                    {
+                                        <a class="btn btn-warning" href="/DietDetail/Scheduler/@(row.ID)">Diyet Takvimim</a>
+                                    }
+                                    <a class="btn btn-outline-danger" href="/Contract/Delete/@(row.ID)">Sil</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

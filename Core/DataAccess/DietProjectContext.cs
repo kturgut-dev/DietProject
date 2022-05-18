@@ -1,4 +1,5 @@
-﻿using Core.Entities.Abstract;
+﻿using Core.Entities;
+using Core.Entities.Abstract;
 using DietProject.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,6 +22,7 @@ namespace DietProject.Core.DataAccess
             modelBuilder.Entity<Food>().ToTable("Foods");
             modelBuilder.Entity<Message>().ToTable("Messages");
             modelBuilder.Entity<User>().ToTable("Users");
+            modelBuilder.Entity<MeasureUnit>().ToTable("MeasureUnits");
         }
 
         // @"Server=.\SQLEXPRESS;Database=DietSystem;Trusted_Connection=True;"
@@ -33,6 +35,7 @@ namespace DietProject.Core.DataAccess
         public DbSet<Food> Foods { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<MeasureUnit> MeasureUnits { get; set; }
         public DbSet<DietitianViewData> DietitianViewData { get; set; }
     }
 }

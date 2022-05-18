@@ -1,0 +1,343 @@
+﻿@using DevExtreme.AspNet.Mvc
+@using DietProject.Core.Entities
+@using Web.Models
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model DietDetailViewData
+
+<div class="row align-items-center">
+    <div class="border-0 mb-4">
+        <div class="card-header py-3 no-bg bg-transparent d-flex align-items-center px-0 justify-content-between border-bottom flex-wrap">
+            <h3 class="fw-bold mb-0">Takvim Detayı</h3>
+        </div>
+    </div>
+</div> <!-- Row end  -->
+<div class="row mb-3">
+    <div class="col-xl-4 col-lg-5 col-md-12">
+        <div class="card profile-card flex-column mb-3">
+            <div class="card-body d-flex profile-fulldeatil flex-column">
+                <div class="profile-info w-100">
+                    <div class="row justify-content-center">
+                        <div class="col-4">
+                            <img src="@Model.UserData.Avatar" alt="@Model.UserData.Avatar" class="avatar xl img-thumbnail shadow-sm">
+                        </div>
+                        <div class="col-12">
+                            <h6 class="mb-0 mt-2 ml-0 mr-0  fw-bold d-block fs-6 text-center">@Model.UserData.FullName</h6>
+                        </div>
+                    </div>
+                    @*<span class="text-muted small">ID : @Model.UserData.ID</span>*@
+
+                    <div class="row g-2 pt-2">
+                        <div class="col-xl-12">
+                            <div class="d-flex align-items-center">
+                                <span>Doğum Tarihi: </span>
+                                <span class="ms-2">@(string.Format("{0}/{1}/{2}",Model.CustomerData.BirthDay,Model.CustomerData.BirthMonth,Model.CustomerData.BirthYear))</span>
+                            </div>
+                        </div>
+                        <div class="col-xl-12">
+                            <div class="d-flex align-items-center">
+                                <span>Boy: </span>
+                                <span class="ms-2">@Model.CustomerData.Height</span>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-12">
+                            <div class="d-flex align-items-center">
+                                <span>Kile: </span>
+                                <span class="ms-2">@Model.CustomerData.Weight</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4 col-lg-5 col-md-12">
+        <div class="card my-todo">
+            <div class="card-header border-bottom-0 todo-wrapper p-4">
+                <h4>Diyet Gün Listesi</h4>
+            </div>
+            <div class="card-body p-4">
+                @if (Model.DietDetailData.Count > 0)
+                {
+
+                    <ul class="list-unstyled mb-0 todo-list">
+                        @foreach (DietDetailDTO row in Model.DietDetailData)
+                        {
+                            <li>
+                                <span>Product Stock Check</span>
+                                <div class="todo-action">
+                                    <span class="btn done p-1 fa fa-check"></span>
+                                    <span class="btn text-danger close p-1 fa fa-trash-o"></span>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <div class="alert alert-danger">Kayıt Bulunamadı</div>
+                }
+                <a href="javascript:void(0)" id="addDay" class="btn btn-outline-warning btn-block">Diyet Listesi Oluştur</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4 col-lg-5 col-md-12">
+        <div class="card my-todo">
+            <div class="card-header border-bottom-0 todo-wrapper p-4">
+                <h4>Gün Detayı</h4>
+            </div>
+            <div class="card-body p-4">
+                <ul class="list-unstyled mb-0 todo-list" id="materialList">
+
+                    @*<li>
+                        <span>Product Stock Check</span>
+                        <div class="todo-action">
+                        <span class="btn done p-1 fa fa-check"></span>
+                        <span class="btn text-danger close p-1 fa fa-trash-o"></span>
+                        </div>
+                        </li>*@
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="specialOfferModal" tabindex="-1" role="dialog" aria-labelledby="specialOfferModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="specialOfferModalTitle">Özel Teklif Gönder</h5>
+                <button type="button" class="closeModal close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="" class="" id="newListFrm">
+
+                    <div class="form-group">
+                        <label for="endDate">Tarih Seçiniz</label>
+                        <input type="date" name="CreatedDate" class="form-control" id="endDate">
+                    </div>
+
+                    <ul class="list-group mb-4" id="formListe">
+                        <li class="list-group-item mb-2">
+                            <div class="form-group">
+                                <a href="javascript:void(0)" class="clearitem close">
+                                    <span aria-hidden="true">×</span>
+                                </a>
+                            </div>
+                            <div class="form-group">
+                                <label for="priceTxt">Ürün</label>
+                                <select class="form-select" name="Foods[0]" id="foodSelector">
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="priceTxt">Ölçü Birimi</label>
+                                <select class="form-select" name="MeasureUnit[0]">
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="endDate">Miktar</label>
+                                <input type="number" name="Quantity[0]" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="endDate">Öğün Tipi</label>
+                                <input type="text" name="MealType[0]" class="form-control">
+                            </div>
+                        </li>
+                    </ul>
+
+
+                    <div>
+                        <div class="col-12 mb-2">
+                            <button type="button" id="addFormElements"
+                                    class="btn btn-outline-warning btn-block">
+                                Ekle
+                            </button>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" id="sendForm"
+                                    class="btn btn-outline-primary btn-block">
+                                Gönder
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+    </> <!-- Row end  -->
+<script>
+
+    let FormIndex=0;
+    let foods = [];
+    let measureUnits = [];
+    $("#addDay").click((e) => {
+        $('#specialOfferModal').modal('show');
+    });
+
+    $(".closeModal").click((e) => {
+        $('#specialOfferModal').modal('hide');
+    });
+
+    function foodsSelectFill(){
+         for (let i = 0; i < FormIndex+1; i++) {
+             if($("select[name='Foods["+i+"]] option").length==0)
+             {
+                 $("select[name='Foods["+i+"]']").append($("<option selected />").val(-1).text('Seçiniz'));
+                $.each(foods, function(index,food) {
+                    $("select[name='Foods["+i+"]']").append($("<option />").val(food.ID).text(food.FoodName));
+                });
+             }
+         }
+    }
+
+    function foodsFill(){
+        axios.get("/Foods")
+        .then(res=>{
+            foods = res.data;
+            foodsSelectFill();
+        }).catch(err=>{
+            console.error(err)
+        })
+    }
+
+    function clearOptions(){
+        $('select').empty()
+    }
+
+    function measureUnitsSelectFill(){
+        //$.each(foods, function(food) {
+        //    $("#foodSelector").append($("<option />").val(food.ID).text(food.MeasureUnitName));
+        //});
+        
+        for (let i = 0; i < FormIndex+1; i++) {
+            if($("select[name='MeasureUnit["+i+"]] option").length==0)
+             {
+               $("select[name='MeasureUnit["+i+"]']").append($("<option selected />").val(-1).text('Seçiniz'));
+                $.each(measureUnits, function(index,food) {
+                    $("select[name='MeasureUnit["+i+"]']").append($("<option />").val(food.ID).text(food.MeasureUnitName));
+                });
+            }
+         }
+    }
+
+    function measureUnitsFill(){
+        axios.get("/MeasureUnits")
+        .then(res=>{
+            measureUnits = res.data;
+            measureUnitsSelectFill();
+        }).catch(err=>{
+            console.error(err)
+        })
+    }
+
+    $( "#sendForm" ).click(function(event) {
+         event.preventDefault();
+
+         let isErr= false;
+
+        let  selects = $('#formListe li div select')
+
+        for (let i = 0; i <= selects.length; i++) {
+            if($(selects[i]).val()==-1){
+                alert('Alanların hepsini lütfen doldurunuz.')
+                isErr=true;
+                break;
+            }
+        }
+
+         let  inputs = $('#formListe li div input')
+
+         if(!isErr)
+        for (let i = 0; i <= inputs.length; i++) {
+            if($(inputs[i]).val() == '' || $(inputs[i]).val() <= 0){
+                alert('Alanların hepsini lütfen doldurunuz.')
+                 isErr=true;
+                break;
+            }
+        }
+
+        if(!isErr){
+            	$("#newListFrm").submit();
+        }
+    });
+
+    function addFormListItem(){
+        let formItemList =  '<li class="list-group-item mb-2">'+
+                           ' <div class="form-group">'+
+                               ' <a href="javascript:void(0)" class="clearitem close">'+
+                              '      <span aria-hidden="true">×</span>'+
+                             '   </a>'+
+                            '</div>'+
+                            '<div class="form-group">'+
+                              '  <label for="priceTxt">Ürün</label>'+
+                             '   <select class="form-select" name="Foods['+FormIndex+']" id="foodSelector">'+
+                            '    </select>'+
+                           ' </div>'+
+
+                           ' <div class="form-group">'+
+                             '   <label for="priceTxt">Ölçü Birimi</label>'+
+                           '     <select class="form-select" name="MeasureUnit['+FormIndex+']">'+
+                            '    </select>'+
+                          '  </div>'+
+
+                         '   <div class="form-group">'+
+                         '       <label for="endDate">Miktar</label>'+
+                         '       <input type="number" name="Quantity['+FormIndex+']" class="form-control">'+
+                         '   </div>'+
+                        '    <div class="form-group">'+
+                       '         <label for="endDate">Öğün Tipi</label>'+
+                       '         <input type="text" name="MealType['+FormIndex+']" class="form-control">'+
+                        '    </div>'+
+                       ' </li>'
+        $("#formListe").append(formItemList);
+        reOrderFormElements();
+    }
+
+    $("#addFormElements").click((e)=>{
+        FormIndex++;
+        addFormListItem();
+        clearOptions();
+        foodsSelectFill();
+        measureUnitsSelectFill();
+         //reOrderFormElements();
+    })
+
+   
+    $('a.clearitem').on('click', function(){
+       alert('aaa')
+      $(this).parent().parent().remove();
+      FormIndex--;
+      reOrderFormElements();
+    });
+
+    function reOrderFormElements(){
+      let  inputs = $('#formListe li div input')
+      let  selects = $('#formListe li div select')
+
+        for (let i = 0; i <= FormIndex; i++) {
+            let name =  $(inputs[i]).attr('name').split('[');
+            let newName = name[0]+'['+i+']';
+            $(inputs[i]).attr('name',newName)
+         }
+          for (let i = 0; i <= FormIndex; i++) {
+            let name =  $(selects[i]).attr('name').split('[');
+            let newName = name[0]+'['+i+']';
+            $(selects[i]).attr('name',newName)
+         }
+    }
+
+    foodsFill();
+    measureUnitsFill();
+   
+</script>

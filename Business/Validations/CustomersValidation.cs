@@ -14,11 +14,11 @@ namespace DietProject.Business.Validations
         {
             RuleFor(x => x.Weight)
                 .NotNull().WithMessage("Kilo kısmı boş olamaz.")
-                .LessThanOrEqualTo(25).WithMessage("Kilonuz en az 25 kg olarak seçebilirsiniz.");
+                .GreaterThanOrEqualTo(25).WithMessage("Kilonuz en az 25 kg olarak seçebilirsiniz.");
 
             RuleFor(x => x.Height)
                 .NotNull().WithMessage("Boy kısmı boş olamaz.")
-                .LessThanOrEqualTo(50).WithMessage("Boyunuz en az 50cm olmalıdır.");
+                .GreaterThanOrEqualTo(50).WithMessage("Boyunuz en az 50cm olmalıdır.");
 
             RuleFor(x => x.BirthDay)
            .NotNull().WithMessage("Ay seçmeniz gerekmektedir.");
@@ -28,7 +28,7 @@ namespace DietProject.Business.Validations
 
 
             RuleFor(x => x.BirthYear)
-                .GreaterThanOrEqualTo(DateTime.Today.AddYears(-10).Year).WithMessage("10 yaşından küçük danışanlar kabul edilmemektedir.");
+                .LessThanOrEqualTo(DateTime.Today.AddYears(-10).Year).WithMessage("10 yaşından küçük danışanlar kabul edilmemektedir.");
 
             RuleFor(x => x.Goal)
    .NotEmpty().WithMessage("Hedefinizi seçiniz.");

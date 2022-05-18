@@ -34,6 +34,9 @@ function SendMessage(user, msg) {
         })
 
     $("#msgTxt").val('');
+
+    if (chatuId != null)
+        userListFill();
     //connection.invoke("sendmessage", user, msg).catch(function (err) {
     //    return console.error(err.toString());
     //});
@@ -99,7 +102,6 @@ $("#userMessageList").on("click", ".userMsgItem", function (event) {
 
 function fillMessges() {
     $('#chatHistory').empty();
-
     //let entries = Object.entries(currentMsgList);
     //let capsEntries = entries.map((entry) => [entry[0][0].toUpperCase() + entry[0].slice(1), entry[1]]);
     //let capsPopulations = Object.fromEntries(capsEntries);
@@ -142,8 +144,6 @@ function appendMessages(message) {
     $("#chatHistory").append(message);
 }
 
-
-
 function msgSendOnClick() {
     const msg = $("#msgTxt").val();
     if (selectedUserId != null)
@@ -151,3 +151,80 @@ function msgSendOnClick() {
 }
 
 userListFill();
+
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+const chatuId = urlParams.get('uId')
+
+if (chatuId != null) {
+    clickUserShowMessages(chatuId);
+}
+
+const dateTimePickerSetStart = {
+    format: 'd.m.Y',
+    lang: 'tr',
+    //onChangeDateTime: function (dp, $input) {
+    //    var date = $input.val();
+    //    console.log(date);
+    //    console.log(d.addMonth(1));
+    //}
+};
+
+let d = new Date();
+let today = d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + d.getDate()
+//let today = new Date().toLocaleDateString()
+console.log(today)
+const dateTimePickerSet = {
+    format: 'd.m.Y',
+    timepicker: false,
+    lang: 'tr',
+    minDate: '-' + today,
+};
+
+$(document).ready(function () {
+    console.log("ready!");
+    jQuery('#startDate').datetimepicker(dateTimePickerSet);
+    jQuery('#endDate').datetimepicker(dateTimePickerSet);
+
+});
+
+
+$(".closeModal").click((e) => {
+    $('#specialOfferModal').modal('hide');
+})
+
+$("#sendSpecialOffer").click((e) => {
+    $("#CustomerID").val(selectedUserId);
+    $('#specialOfferModal').modal('show');
+});
+
+$("form").on("submit", function (event) {
+    event.preventDefault();
+    var serializedData = $(this).serialize();
+    axios.post('/Contract', serializedData).then(res => {
+        console.log(res)
+
+        Swal.fire({
+            title: 'Uyarı',
+            html: res.data.Message,
+            timer: 3000,
+        })
+
+        $('#specialOfferModal').modal('hide');
+
+
+        if (res.data.IsSuccess) {
+            let msg = '<div class="row">'+
+            '<div class="col-12>Onayınıza teklif geldi. Detay için <a href="#">tıklayınız.</a></div>' +
+                '</div > ';
+            SendMessage(selectedUserId, msg);
+        }
+
+
+        $('#startDate').val('');
+        $('#endDate').val('');
+        $('#priceTxt').val('');
+    }).catch(err => {
+        console.error(err)
+    })
+});

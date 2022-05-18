@@ -23,18 +23,31 @@ namespace Web.Controllers
         private readonly IHubContext<Chat> _chatHub;
         private readonly MessageOperations _messageOperations;
         private readonly UserOperations _userOperations;
+        private readonly DietitianOperations _DietitianOperations;
+        private readonly CustomerOperations _CustomerOperations;
         public ChatController(IHubContext<Chat> chatHub, IDbContextFactory<DietProjectContext> contextFactory)
         {
             _chatHub = chatHub;
             _messageOperations = new MessageOperations(contextFactory);
             _userOperations = new UserOperations(contextFactory);
+            _DietitianOperations = new DietitianOperations(contextFactory);
+            _CustomerOperations = new CustomerOperations(contextFactory);
 
             //ClaimHelper.SetUserIdentity(User.Identity);
         }
 
         public IActionResult Index()
         {
-            return View();
+            ClaimHelper.SetUserIdentity(User.Identity);
+            ChatViewDTO viewData = new ChatViewDTO();
+
+            bool dietitianIsExits = _DietitianOperations.UserIsExists(ClaimHelper.UserID);
+
+            viewData.UserType = dietitianIsExits ? UserTypes.Dietitian : UserTypes.Customer;
+
+
+
+            return View(viewData);
         }
 
         [HttpGet]

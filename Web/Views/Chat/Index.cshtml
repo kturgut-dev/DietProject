@@ -3,16 +3,26 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@model Web.Models.ChatViewDTO
+
 <style>
     .selectedUser {
         background-color: #ddd !important;
     }
+
+    .hover:hover {
+        background-color: #989899 !important;
+        color: white !important;
+    }
 </style>
+
+<link href="~/datetimepicker/jquery.datetimepicker.min.css" rel="stylesheet" />
+<script src="~/datetimepicker/jquery.datetimepicker.full.js"></script>
 
 <div class="row g-0">
     <div class="col-12 d-flex">
         <!-- Card: -->
-        <div class="card card-chat border-1 border-right-0 w380 h-100">
+        <div class="card card-chat border-1 border-right-0 w380 h-75">
             <div class="px-4 py-3 py-md-4">
                 <div class="input-group mb-3">
                     <input id="chatSearch" type="text" class="form-control mb-1" placeholder="Ara">
@@ -28,7 +38,7 @@
             </div>
         </div>
         <!-- Card: -->
-        <div id="chat" class="card card-chat-body border-1 w-100 px-4 px-md-5 py-3 py-md-4" style="display: none;">
+        <div id="chat" class="card card-chat-body border-1 w-100 px-4 px-md-5 py-3 py-md-4 h-75" style="display: none;">
 
             <!-- Chat: Header -->
             <div class="chat-header d-flex justify-content-between align-items-center border-bottom pb-3">
@@ -40,9 +50,14 @@
                     </div>
                 </div>
                 <div class="d-flex">
-                    <a class="nav-link py-2 px-3 text-muted d-none d-lg-block" href="javascript:void(0);"><i class="fa fa-gear"></i></a>
+                    @if (Model.UserType == Web.Models.UserTypes.Dietitian)
+                    {
+                        <a class="nav-link py-2 px-3 text-muted d-none d-lg-block border hover rounded" id="sendSpecialOffer" href="javascript:void(0);"><i class="fa fa-money-check-dollar"></i> Özel Teklif Gönder</a>
+                    }
+                    <a class="nav-link py-2 px-3 text-muted d-none d-lg-block border hover rounded" id="routeContrctList" href="javascript:void(0)">Teklif Listesi</a>
+
                     <a class="nav-link py-2 px-3 text-muted d-none d-lg-block" href="javascript:void(0);"><i class="fa fa-user-circle"></i></a>
-                    <a class="nav-link py-2 px-3 d-block d-lg-none chatlist-toggle" href="#"><i class="fa fa-bars"></i></a>
+                    @*<a class="nav-link py-2 px-3 d-block d-lg-none chatlist-toggle" href="#"><i class="fa fa-bars"></i></a>*@
 
                     <!-- Mobile menu -->
                     <div class="nav-item list-inline-item d-block d-xl-none">
@@ -84,9 +99,125 @@
         </div>
     </div>
 </div> <!-- row end -->
+@if (Model.UserType == Web.Models.UserTypes.Dietitian)
+{
+    <!-- Modal -->
+    <div class="modal fade" id="specialOfferModal" tabindex="-1" role="dialog" aria-labelledby="specialOfferModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="specialOfferModalTitle">Özel Teklif Gönder</h5>
+                    <button type="button" class="closeModal close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form methos="post" class="">
+                        <label for="priceTxt">Fiyat Teklifi</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" name="ContractPrice" id="priceTxt" placeholder="Fiyat">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">₺</div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="startDate">Başlangıç Tarihi</label>
+                                    <input type="date" name="ContractStartDate" class="form-control" id="startDate">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="endDate">Bitiş Tarihi</label>
+                                    <input type="date" name="ContractEndDate" class="form-control" id="endDate">
+                                </div>
+                            </div>
+                        </div>
+
+                        <input hidden type="hidden" name="CustomerID" id="CustomerID">
+
+                        <button type="submit" id="sendSpecialOfferForm"
+                            class="btn btn-primary float-right">
+
+                            Gönder
+
+                        </button>
+                    </form>
+
+
+                    @*   @(Html.DevExtreme().Form<DietProject.Core.Entities.Contract>()
+                        .ID("customOfferPriceForm")
+                        .ColCount(2)
+                        .LabelMode(FormLabelMode.Hidden)
+                        .Items(items => {
+                        items.AddSimpleFor(m => m.ContractPrice)
+                        .ColSpan(2)
+                        .Editor(e => e
+                        .NumberBox()
+                        .ShowSpinButtons(true)
+                        .ShowClearButton(false)
+                        .Min(0)
+                        .Max(100000)
+                        .Label("Fiyat")
+                        .ID("priceTxt")
+                        .LabelMode(EditorLabelMode.Floating)
+                        ).Label(x=>x.Text("Fiyat"));
+
+                        items.AddSimpleFor(m => m.ContractStartDate)
+                        .Editor(e => e
+                        .DateBox()
+                        .Label("Teklif Başlangıç")
+                        .ShowClearButton(true)
+                        .Min(DateTime.Today)
+                        .DisplayFormat("dd/MM/yyyy")
+                        .Value(DateTime.Today)
+                        .LabelMode(EditorLabelMode.Floating)
+                        ).Label(x=>x.Text("Teklif Başlangıç"));
+
+                        items.AddSimpleFor(m => m.ContractEndDate)
+                        .Editor(e => e
+                        .DateBox()
+                        .Label("Teklif Bitiş")
+                        .ShowClearButton(true)
+                        .Min(DateTime.Today.AddDays(1))
+                        .Value(DateTime.Today.AddDays(1))
+                        .DisplayFormat("dd/MM/yyyy")
+                        .LabelMode(EditorLabelMode.Floating)
+                        ).Label(x=>x.Text("Teklif Bitiş"));
+
+                        })
+                        )
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary closeModal" data-dismiss="modal">Kapat</button>
+                        @(Html.DevExtreme().Button()
+                        .Text("Gönder")
+                        .Type(ButtonType.Normal)
+                        .StylingMode(ButtonStylingMode.Contained)
+                        .Width(120)
+                        .ID("sendSpecialOfferBtn")
+                        .OnClick("sendOfferPrice")
+                        )*@
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
 @section Scripts{
+
 <script src="~/js/jquery-template/dist/jquery.loadTemplate.js"></script>
 <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
 <script src="~/js/socket.js"></script>
+
+<script>
+    let urlContract = "/Contract/?userType=@(Model.UserType == Web.Models.UserTypes.Dietitian ? nameof(Web.Models.UserTypes.Customer) : nameof(Web.Models.UserTypes.Dietitian))"
+    $("#routeContrctList").click((e)=>{
+        urlContract = urlContract+ "&uId="+ selectedUserId;
+        window.location.href = urlContract;
+    });
+</script>
 }
 
