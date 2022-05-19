@@ -14,6 +14,22 @@ namespace DietProject.Core.DataAccess
     {
         public DietitianOperations(IDbContextFactory<DietProjectContext> blogContext) : base(blogContext) { }
 
+        public List<Dietitian> GetAllTOPDietitians()
+        {
+            using (DbContext context = _contextFactory.CreateDbContext())
+            {
+                try
+                {
+                    return context.Set<Dietitian>()
+                          .FromSqlRaw("exec dbo.spSelectTopDietitians")
+                          .ToList();
+                }
+                catch (Exception ex)
+                {
+                    return null;
+                }
+            }
+        }
         public bool UserIsExists(Int64 UserID)
         {
             return base.Get(x => x.UserID == UserID) != null;

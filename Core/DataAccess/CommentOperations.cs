@@ -14,5 +14,7 @@ namespace DietProject.Core.DataAccess
     public class CommentOperations : BaseDataAccess<Comment>
     {
         public CommentOperations(IDbContextFactory<DietProjectContext> blogContext) : base(blogContext) { }
+
+       
     }
 }

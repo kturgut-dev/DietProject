@@ -1,12 +1,95 @@
-@{
+﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+@using DevExtreme.AspNet.Mvc
 @using Web.Models
+@model HomeViewData
 
 
 <div class="row">
-    <div class="md-col-6">Dan��an</div>
-    <div class="md-col-6">Diyetisyen</div>
+    <div class="col-12">
+        <div id="carouselExampleControls" class="carousel slide" width="250" data-ride="carousel">
+            <div class="carousel-inner">
+                @foreach (Slider slid in Model.Sliders)
+                {
+                    <div class="carousel-item active">
+                        <img class="d-block w-100" height="450" src="@slid.ImageUrl" alt="@slid.Text">
+                    </div>
+                }
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Geri</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">İleri</span>
+            </a>
+        </div>
+    </div>
+    <div class="col-12">
+        <h4>Diyetisyen Listesi</h4>
+        <div class="row">
+            @if (Model.PopulerDietitians.Count == 0)
+            {
+                <div class="alert alert-warning">Kayıt bulunamadı.</div>
+            }
+            else
+            {
+                @foreach (ContractDietitians row in Model.PopulerDietitians)
+                {
+                    <div class="4">
+                        <div class="card" style="width: 18rem;">
+                            <img class="card-img-top" src="@row.Avatar" alt="Card image cap">
+                            <div class="card-body">
+                                <h5 class="card-title">@row.DietitianName</h5>
+                                <p class="card-text">@row.Bio</p>
+                                <a href="/Profile/@row.DietitianID" class="btn btn-primary">Profile Git</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="row">
+            <div class="col-6">
+                <h4>Danışanlarım</h4>
+                @if (Model.Dietitians.Count == 0)
+                {
+                    <div class="alert alert-warning">Kayıt bulunamadı.</div>
+                }
+                else
+                {
+                    <ul class="list-group">
+                        @foreach (ContractDietitians dietitian in Model.Dietitians)
+                        {
+                            <li class="list-group-item"><a href="/Profile/@dietitian.DietitianID">@dietitian.DietitianName</a></li>
+                        }
+                    </ul>
+                }
+            </div>
+            <div class="col-6">
+                @(Html.DevExtreme().Scheduler()
+                .ID("scheduler")
+                .DataSource(Model.Calender)
+                .TimeZone("Europe/Istanbul")
+                .TextExpr("Text")
+                .StartDateExpr("StartDate")
+                .EndDateExpr("EndDate")
+                .AllDayExpr("AllDay")
+                .Views(new[] {
+                SchedulerViewType.Day,
+                SchedulerViewType.Month
+                })
+                .CurrentView(SchedulerViewType.Month)
+                .CurrentDate(DateTime.Today)
+                .StartDayHour(9)
+                .Height(600)
+                )
+            </div>
+        </div>
+    </div>
 </div>
 

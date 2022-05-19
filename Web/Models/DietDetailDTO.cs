@@ -14,6 +14,7 @@ namespace Web.Models
     {
         public User UserData { get; set; }
         public Customer CustomerData { get; set; }
+        public Contract ContractData { get; set; }
         public List<DietDetailDTO> DietDetailData { get; set; }
         public DietDetailViewData()
         {

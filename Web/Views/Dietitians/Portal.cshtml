@@ -257,7 +257,7 @@
           axios.get('/welcome/CityList')
           .then(res=>{
                $.each(res.data, function() {
-                  $dropdown.append($("<option "+(cityList.includes(this.name) ? 'selected' : '')+"/>").val(this.name).text(this.name));
+                  $dropdown.append($("<option "+(cityList!=null&&cityList.includes(this.name) ? 'selected' : '')+"/>").val(this.name).text(this.name));
               });
           })
       }

@@ -13,6 +13,10 @@
         </div>
     </div>
 </div> <!-- Row end  -->
+@if (ViewData["response"] != null)
+{
+    <div class="alert alert-warning">@(((ResponseModel)ViewData["response"]).Message)</div>
+}
 <div class="row mb-3">
     <div class="col-xl-4 col-lg-5 col-md-12">
         <div class="card profile-card flex-column mb-3">
@@ -66,11 +70,18 @@
                     <ul class="list-unstyled mb-0 todo-list">
                         @foreach (DietDetailDTO row in Model.DietDetailData)
                         {
-                            <li>
-                                <span>Product Stock Check</span>
+                            <li data-date="@row.Date">
+                                <span>@row.DayName</span>
                                 <div class="todo-action">
-                                    <span class="btn done p-1 fa fa-check"></span>
-                                    <span class="btn text-danger close p-1 fa fa-trash-o"></span>
+                                    @*<a href="javascript:void(0)" class="editDay">
+                                        <span class="btn text-warning p-1 fa fa-pencil"></span>
+                                    </a>*@
+                                    <a href="javascript:void(0)" class="showDay">
+                                        <span class="btn text-success p-1 fa fa-eye"></span>
+                                    </a>
+                                    <a href="javascript:void(0)" class="removeDay">
+                                        <span class="btn text-danger p-1 fa fa-trash"></span>
+                                    </a>
                                 </div>
                             </li>
                         }
@@ -121,7 +132,7 @@
 
                     <div class="form-group">
                         <label for="endDate">Tarih Seçiniz</label>
-                        <input type="date" name="CreatedDate" class="form-control" id="endDate">
+                        <input type="date" min="@Model.ContractData.ContractStartDate" max="@Model.ContractData.ContractEndDate" name="CreatedDate" class="form-control" id="endDate">
                     </div>
 
                     <ul class="list-group mb-4" id="formListe">
@@ -145,7 +156,7 @@
 
                             <div class="form-group">
                                 <label for="endDate">Miktar</label>
-                                <input type="number" name="Quantity[0]" class="form-control">
+                                <input type="number" min="0" name="Quantity[0]" class="form-control">
                             </div>
                             <div class="form-group">
                                 <label for="endDate">Öğün Tipi</label>
@@ -176,11 +187,25 @@
 </div>
 
     </> <!-- Row end  -->
+
+<link href="~/datetimepicker/jquery.datetimepicker.min.css" rel="stylesheet" />
+<script src="~/datetimepicker/jquery.datetimepicker.full.js"></script>
+
 <script>
 
     let FormIndex=0;
     let foods = [];
     let measureUnits = [];
+    const dateTimePickerSet = {
+        format: 'd.m.Y',
+        timepicker: false,
+        lang: 'tr',
+        minDate: '-' + '@Model.ContractData.ContractStartDate',
+        maxDate: '+' + '@Model.ContractData.ContractEndDate',
+    };
+
+    //jQuery('#endDate').datetimepicker(dateTimePickerSet);
+
     $("#addDay").click((e) => {
         $('#specialOfferModal').modal('show');
     });
@@ -191,7 +216,7 @@
 
     function foodsSelectFill(){
          for (let i = 0; i < FormIndex+1; i++) {
-             if($("select[name='Foods["+i+"]] option").length==0)
+             if($("select[name='Foods["+i+"]'] option").length==0)
              {
                  $("select[name='Foods["+i+"]']").append($("<option selected />").val(-1).text('Seçiniz'));
                 $.each(foods, function(index,food) {
@@ -212,16 +237,16 @@
     }
 
     function clearOptions(){
-        $('select').empty()
+        //$('select').empty()
     }
 
     function measureUnitsSelectFill(){
         //$.each(foods, function(food) {
         //    $("#foodSelector").append($("<option />").val(food.ID).text(food.MeasureUnitName));
         //});
-        
+
         for (let i = 0; i < FormIndex+1; i++) {
-            if($("select[name='MeasureUnit["+i+"]] option").length==0)
+            if($("select[name='MeasureUnit["+i+"]'] option").length==0)
              {
                $("select[name='MeasureUnit["+i+"]']").append($("<option selected />").val(-1).text('Seçiniz'));
                 $.each(measureUnits, function(index,food) {
@@ -268,7 +293,7 @@
         }
 
         if(!isErr){
-            	$("#newListFrm").submit();
+                $("#newListFrm").submit();
         }
     });
 
@@ -293,7 +318,7 @@
 
                          '   <div class="form-group">'+
                          '       <label for="endDate">Miktar</label>'+
-                         '       <input type="number" name="Quantity['+FormIndex+']" class="form-control">'+
+                         '       <input type="number" min="0" name="Quantity['+FormIndex+']" class="form-control">'+
                          '   </div>'+
                         '    <div class="form-group">'+
                        '         <label for="endDate">Öğün Tipi</label>'+
@@ -313,31 +338,115 @@
          //reOrderFormElements();
     })
 
-   
+
     $('a.clearitem').on('click', function(){
-       alert('aaa')
       $(this).parent().parent().remove();
       FormIndex--;
       reOrderFormElements();
     });
 
     function reOrderFormElements(){
-      let  inputs = $('#formListe li div input')
-      let  selects = $('#formListe li div select')
+      let  elements = $('#formListe li')
+      //let  inputs = $('#formListe li div input')
+      //let  selects = $('#formListe li div select')
+      for (let i = 0; i <= elements.length; i++) {
+          const tagElements = $(elements[i]).children('div').children('input')
+          for(let x = 0; x <= tagElements.length; x++){
+              if($(tagElements[x]).attr('name')!=undefined)
+               {
+                   let names =   $(tagElements[x]).attr('name').split('[');
+                   let newName = names[0]+'['+i+']';
+                   $(tagElements[x]).attr('name',newName)
+               }
+          }
 
-        for (let i = 0; i <= FormIndex; i++) {
-            let name =  $(inputs[i]).attr('name').split('[');
-            let newName = name[0]+'['+i+']';
-            $(inputs[i]).attr('name',newName)
-         }
-          for (let i = 0; i <= FormIndex; i++) {
-            let name =  $(selects[i]).attr('name').split('[');
-            let newName = name[0]+'['+i+']';
-            $(selects[i]).attr('name',newName)
-         }
+          const tagElementsselect = $(elements[i]).children('div').children('select')
+          for(let x = 0; x <= tagElementsselect.length; x++){
+              if($(tagElementsselect[x]).attr('name')!=undefined)
+               {
+                   let names =   $(tagElementsselect[x]).attr('name').split('[');
+                   let newName = names[0]+'['+i+']';
+                   $(tagElementsselect[x]).attr('name',newName)
+               }
+          }
+      }
+         //for (let i = 0; i <= FormIndex; i++) {
+         //  for(let index=0; index<inputs.length; index++){
+         //       let name =  $(inputs[index]).attr('name').split('[');
+         //       let newName = name[0]+'['+i+']';
+         //       $(inputs[index]).attr('name',newName)
+         //  }
+         //}
+         // for (let i = 0; i <= FormIndex; i++) {
+         //   let name =  $(selects[i]).attr('name').split('[');
+         //   let newName = name[0]+'['+i+']';
+         //   console.log(newName)
+         //   $(selects[i]).attr('name',newName)
+         //}
     }
+
+    function materialListFill(){
+        let listElement = $('ul#materialList');
+        listElement.empty()
+        if(selectedDayDietDetailList!=null && selectedDayDietDetailList.length>0){
+            selectedDayDietDetailList.forEach((row,index)=>{
+                let htmlView = '<li class="'+(row.IsCompleted ==true ? 'active' : '') +'"><span>'+row.Quantity +' ' + row.MeasureUnit +' '+row.FoodName+' - '+row.MealType +'</span></li>';
+                listElement.append(htmlView)
+            })
+        }
+    }
+
+    let selectedDayDietDetailList = [];
+     $('.showDay').on('click', function(){
+         let selectedDate = $($(this).parent().parent()).attr("data-date");
+         let  contarctId=  window.location.href.split("/").pop();
+
+         $.post('/DietDetail/Details/'+contarctId, { selectedDate: selectedDate })
+          .done(function( res ) {
+            selectedDayDietDetailList = res.Data;
+            materialListFill();
+          });
+    });
+
+    $('.editDay').on('click', function(){
+         let selectedDate = $($(this).parent().parent()).attr("data-date");
+         let  contarctId=  window.location.href.split("/").pop();
+
+         //$.post('/DietDetail/Details/'+contarctId, { selectedDate: selectedDate })
+         // .done(function( res ) {
+         //   selectedDayDietDetailList = res.Data;
+         //   materialListFill();
+         // });
+    });
+
+    $('.removeDay').on('click', function(){
+         let selectedDate = $($(this).parent().parent()).attr("data-date");
+         let  contarctId=  window.location.href.split("/").pop();
+
+        Swal.fire({
+          title: 'Emin misiniz?',
+          text: "Bu kaydı silmek istediğinize emin misiniz?",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Evet!',
+          cancelButtonText: 'Hayır'
+        }).then((result) => {
+          if (result.isConfirmed) {
+                $.post('/DietDetail/Delete/'+contarctId, { selectedDate: selectedDate })
+          .done(function( res ) {
+            selectedDayDietDetailList = res.Data;
+            materialListFill();
+          });
+
+          }
+        })
+        
+    });
+
 
     foodsFill();
     measureUnitsFill();
-   
+
 </script>
