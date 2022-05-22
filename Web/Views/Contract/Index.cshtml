@@ -53,10 +53,11 @@
                                         }
                                     }
                                     else
-                                    {@if (Web.Helpers.ClaimHelper.GetUserType() == Web.Models.UserTypes.Dietitian)
-                                        {
+                                    {
+                                        @*@if (Web.Helpers.ClaimHelper.GetUserType() == Web.Models.UserTypes.Customer)
+                                        {*@
                                         <a class="btn btn-warning" href="/DietDetail/Scheduler/@(row.ID)">Diyet Takvimi</a>
-                                    }
+                                    @*}*@
                                     }
                                     <a class="btn btn-outline-danger" href="/Contract/Delete/@(row.ID)">Sil</a>
                                 </td>
