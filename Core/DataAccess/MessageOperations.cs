@@ -15,6 +15,8 @@ namespace DietProject.Core.DataAccess
     {
         public MessageOperations(IDbContextFactory<DietProjectContext> blogContext) : base(blogContext) { }
 
+        public MessageOperations() : base(new MigrationsContextFactory()) { }
+
         public List<Message> GetLastMessagesUser(Int64 UserID)
         {
             using (DbContext context = _contextFactory.CreateDbContext())
@@ -39,9 +41,13 @@ namespace DietProject.Core.DataAccess
                 try
                 {
                     return context.Set<Message>()
-                          .Where(x => (x.SendedUserID == UserID || x.ReceiverUserID == UserID) && (x.SendedUserID == ReciverUserID || x.ReceiverUserID == ReciverUserID))
-                          .OrderBy(x => x.MessageDate)
-                          .ToList();
+                               .FromSqlRaw("exec dbo.spSelectLastMessages {0}, {1}", UserID, ReciverUserID)
+                               .ToList();
+
+                    //return context.Set<Message>()
+                    //     .Where(x => (x.SendedUserID == UserID || x.ReceiverUserID == UserID) && (x.SendedUserID == ReciverUserID || x.ReceiverUserID == ReciverUserID))
+                    //     .OrderBy(x => x.MessageDate)
+                    //     .ToList();
                 }
                 catch (Exception ex)
                 {

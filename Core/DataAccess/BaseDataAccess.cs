@@ -12,6 +12,7 @@ namespace Core.DataAccess
     public class BaseDataAccess<TEntity> : IBaseOperations<TEntity> where TEntity : BaseEntity, new()
     {
         public readonly IDbContextFactory<DietProjectContext> _contextFactory;
+
         public BaseDataAccess(IDbContextFactory<DietProjectContext> blogContext)
         {
             _contextFactory = blogContext;

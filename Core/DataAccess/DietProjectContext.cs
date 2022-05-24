@@ -7,10 +7,13 @@ namespace DietProject.Core.DataAccess
 {
     public class DietProjectContext : DbContext
     {
-        public DietProjectContext(DbContextOptions<DietProjectContext> options) : base(options)
-        {
+        public DietProjectContext(DbContextOptions<DietProjectContext> options) : base(options) { }
 
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    if (!optionsBuilder.IsConfigured)
+        //        optionsBuilder.UseSqlServer(this.BuilderConnectionString());
+        //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -23,6 +26,7 @@ namespace DietProject.Core.DataAccess
             modelBuilder.Entity<Message>().ToTable("Messages");
             modelBuilder.Entity<User>().ToTable("Users");
             modelBuilder.Entity<MeasureUnit>().ToTable("MeasureUnits");
+            modelBuilder.Entity<Meeting>().ToTable("Meetings");
         }
 
         // @"Server=.\SQLEXPRESS;Database=DietSystem;Trusted_Connection=True;"
@@ -37,5 +41,6 @@ namespace DietProject.Core.DataAccess
         public DbSet<User> Users { get; set; }
         public DbSet<MeasureUnit> MeasureUnits { get; set; }
         public DbSet<DietitianViewData> DietitianViewData { get; set; }
+        public DbSet<Meeting> Meetings { get; set; }
     }
 }

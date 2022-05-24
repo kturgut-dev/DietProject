@@ -23,6 +23,8 @@
       <None Include="wwwroot\assets\js\page\profile.js" />
       <None Include="wwwroot\assets\js\page\todo.js" />
       <None Include="wwwroot\assets\js\template.js" />
+      <None Include="wwwroot\evo-calendar\js\evo-calendar.js" />
+      <None Include="wwwroot\evo-calendar\js\evo-calendar.min.js" />
       <None Include="wwwroot\js\jquery-template\dist\jquery.loadTemplate.js" />
       <None Include="wwwroot\js\jquery-template\dist\jquery.loadTemplate.min.js" />
     </ItemGroup>

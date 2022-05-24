@@ -11,5 +11,7 @@ namespace Core.Entities.Abstract
     {
         public User UserData { get; set; }
         public Dietitian DietitianData { get; set; }
+        public bool IsActiveComment { get; set; } = false;
+
     }
 }

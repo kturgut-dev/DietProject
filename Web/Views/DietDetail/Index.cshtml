@@ -6,13 +6,13 @@
 }
 @model DietDetailViewData
 
-<div class="row align-items-center">
+@*<div class="row align-items-center">
     <div class="border-0 mb-4">
-        <div class="card-header py-3 no-bg bg-transparent d-flex align-items-center px-0 justify-content-between border-bottom flex-wrap">
-            <h3 class="fw-bold mb-0">Takvim Detayı</h3>
-        </div>
+    <div class="card-header py-3 no-bg bg-transparent d-flex align-items-center px-0 justify-content-between border-bottom flex-wrap">
+    <h3 class="fw-bold mb-0">Müşteri Detay</h3>
     </div>
-</div> <!-- Row end  -->
+    </div>
+    </div> <!-- Row end  -->*@
 @if (ViewData["response"] != null)
 {
     <div class="alert alert-warning">@(((ResponseModel)ViewData["response"]).Message)</div>
@@ -64,7 +64,7 @@
                 <h4>Diyet Gün Listesi</h4>
             </div>
             <div class="card-body p-4">
-                @if (Model.DietDetailData.Count > 0)
+                @if (Model.DietDetailData != null && Model.DietDetailData.Count > 0)
                 {
 
                     <ul class="list-unstyled mb-0 todo-list">
@@ -75,7 +75,7 @@
                                 <div class="todo-action">
                                     @*<a href="javascript:void(0)" class="editDay">
                                         <span class="btn text-warning p-1 fa fa-pencil"></span>
-                                    </a>*@
+                                        </a>*@
                                     <a href="javascript:void(0)" class="showDay">
                                         <span class="btn text-success p-1 fa fa-eye"></span>
                                     </a>
@@ -91,7 +91,13 @@
                 {
                     <div class="alert alert-danger">Kayıt Bulunamadı</div>
                 }
-                <a href="javascript:void(0)" id="addDay" class="btn btn-outline-warning btn-block">Diyet Listesi Oluştur</a>
+                 @{
+                            Web.Helpers.ClaimHelper.SetUserIdentity(User.Identity);
+                        }
+                @if(Web.Helpers.ClaimHelper.GetUserType() == Web.Models.UserTypes.Dietitian)
+                {
+                       <a href="javascript:void(0)" id="addDay" class="btn btn-outline-warning btn-block">Diyet Listesi Oluştur</a>
+                }
             </div>
         </div>
     </div>
@@ -128,7 +134,9 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="post" action="" class="" id="newListFrm">
+                @if(@Model.ContractData!=null)
+                {
+                    <form method="post" action="" class="" id="newListFrm">
 
                     <div class="form-group">
                         <label for="endDate">Tarih Seçiniz</label>
@@ -181,6 +189,7 @@
                         </div>
                     </div>
                 </form>
+                }
             </div>
         </div>
     </div>
@@ -196,15 +205,7 @@
     let FormIndex=0;
     let foods = [];
     let measureUnits = [];
-    const dateTimePickerSet = {
-        format: 'd.m.Y',
-        timepicker: false,
-        lang: 'tr',
-        minDate: '-' + '@Model.ContractData.ContractStartDate',
-        maxDate: '+' + '@Model.ContractData.ContractEndDate',
-    };
-
-    //jQuery('#endDate').datetimepicker(dateTimePickerSet);
+    
 
     $("#addDay").click((e) => {
         $('#specialOfferModal').modal('show');
@@ -442,7 +443,7 @@
 
           }
         })
-        
+
     });
 
 

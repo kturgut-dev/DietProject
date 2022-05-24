@@ -52,6 +52,8 @@ namespace Web
 
             services.AddSignalR();
 
+            services.AddHttpContextAccessor();
+
             Chat.AcitveUsers = new System.Collections.Generic.List<Models.SocketUser>();
         }
 

@@ -14,6 +14,7 @@ namespace DietProject.Core.DataAccess
     public class CustomerOperations : BaseDataAccess<Customer>
     {
         public CustomerOperations(IDbContextFactory<DietProjectContext> blogContext) : base(blogContext) {}
+        public CustomerOperations() : base(new MigrationsContextFactory()) { }
 
         public bool UserIsExists(Int64 UserID)
         {

@@ -13,7 +13,7 @@ namespace DietProject.Core.DataAccess
     public class DietitianOperations : BaseDataAccess<Dietitian>
     {
         public DietitianOperations(IDbContextFactory<DietProjectContext> blogContext) : base(blogContext) { }
-
+        public DietitianOperations() : base(new MigrationsContextFactory()) { }
         public List<Dietitian> GetAllTOPDietitians()
         {
             using (DbContext context = _contextFactory.CreateDbContext())

@@ -36,29 +36,43 @@ namespace Web.Controllers
             DietDetailViewData viewData = new DietDetailViewData();
             List<DietDetailDTO> res = new List<DietDetailDTO>();
             ClaimHelper.SetUserIdentity(User.Identity);
-            Contract contract = contractOperations.Get(x => x.ID == contarctId);
 
-            var dates = new List<DateTime>();
-
-            int index = 1;
-            for (DateTime dt = contract.ContractStartDate; dt <= contract.ContractEndDate; dt = dt.AddDays(1))
+            if (contarctId != -1)
             {
-                IList<DietDetail> dtList = (dietDetailOperations.GetAll(x => x.ContractID == contarctId && x.CreatedDate == dt).ToList());
-                if (dtList.ToList().Count > 0)
-                {
-                    DietDetailDTO row = new DietDetailDTO();
-                    row.Date = dt;
-                    row.DayName = index.ToString() + ". Gün (" + dt.ToString("dd.MM.yyyy") + ")";
 
-                    res.Add(row);
+                Contract contract = contractOperations.Get(x => x.ID == contarctId);
+
+                var dates = new List<DateTime>();
+
+                int index = 1;
+                for (DateTime dt = contract.ContractStartDate; dt <= contract.ContractEndDate; dt = dt.AddDays(1))
+                {
+                    IList<DietDetail> dtList = (dietDetailOperations.GetAll(x => x.ContractID == contarctId && x.CreatedDate == dt).ToList());
+                    if (dtList.ToList().Count > 0)
+                    {
+                        DietDetailDTO row = new DietDetailDTO();
+                        row.Date = dt;
+                        row.DayName = index.ToString() + ". Gün (" + dt.ToString("dd.MM.yyyy") + ")";
+
+                        res.Add(row);
+                    }
+
+                    index++;
                 }
 
-                index++;
+                viewData.UserData = userOperations.Get(x => x.ID == contract.CustomerID);
+                viewData.CustomerData = customerOperations.Get(x => x.UserID == contract.CustomerID);
+                viewData.DietDetailData = res;
+                viewData.ContractData = contract;
+
             }
-            viewData.UserData = userOperations.Get(x => x.ID == contract.CustomerID);
-            viewData.CustomerData = customerOperations.Get(x => x.UserID == contract.CustomerID);
+            else
+            {
+
+            }
+            viewData.UserData = userOperations.Get(x => x.ID == ClaimHelper.UserID);
+            viewData.CustomerData = customerOperations.Get(x => x.UserID == ClaimHelper.UserID);
             viewData.DietDetailData = res;
-            viewData.ContractData = contract;
             return View(viewData);
         }
 
@@ -156,8 +170,8 @@ namespace Web.Controllers
             {
                 dietDetailOperations.Delete(item);
             }
-           
-            return Ok(new ResponseModel(true,"Başarıyla kayıtlar silindi."));
+
+            return Ok(new ResponseModel(true, "Başarıyla kayıtlar silindi."));
         }
 
         [HttpPost("/DietDetail/Edit")]

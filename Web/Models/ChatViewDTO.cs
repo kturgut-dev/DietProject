@@ -8,6 +8,7 @@
     public enum UserTypes
     {
         Dietitian,
-        Customer
+        Customer,
+        NoActivated//daha tamamlanmayan süreç
     }
 }

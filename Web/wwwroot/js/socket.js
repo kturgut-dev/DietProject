@@ -215,7 +215,7 @@ $("form").on("submit", function (event) {
 
         if (res.data.IsSuccess) {
             let msg = '<div class="row">'+
-            '<div class="col-12>Onayınıza teklif geldi. Detay için <a href="#">tıklayınız.</a></div>' +
+            '<div class="col-12">Onayınıza teklif geldi. Detay için <a href="#">tıklayınız.</a></div>' +
                 '</div > ';
             SendMessage(selectedUserId, msg);
         }

@@ -14,6 +14,6 @@ namespace DietProject.Core.DataAccess
     public class DietDetailOperations : BaseDataAccess<DietDetail>
     {
         public DietDetailOperations(IDbContextFactory<DietProjectContext> blogContext) : base(blogContext) { }
-        
+        public DietDetailOperations() : base(new MigrationsContextFactory()) { }
     }
 }

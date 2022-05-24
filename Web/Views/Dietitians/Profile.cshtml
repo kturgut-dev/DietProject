@@ -1,10 +1,24 @@
 ﻿@using Core.Entities.Abstract
 @using System.Security.Claims
 @using DevExtreme.AspNet.Mvc
+@using DietProject.Core.Entities
+@using Web.Models
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
+    Web.Helpers.ClaimHelper.SetUserIdentity(User.Identity);
+
 }
-@model DietitianDTO
+@model Web.Models.DietitianDTOView
+
+<!-- Core Stylesheet -->
+<link rel="stylesheet" href="~/evo-calendar/css/evo-calendar.css" />
+<!-- Optional Themes -->
+@*<link rel="stylesheet" href="~/evo-calendar/css/evo-calendar.midnight-blue.css" />
+    <link rel="stylesheet" href="~/evo-calendar/evo-calendar.orange-coral.css" />
+    <link rel="stylesheet" href="~/evo-calendar/evo-calendar.royal-navy.css" />*@
+<!-- JavaScript -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="~/evo-calendar/js/evo-calendar.js"></script>
 
 <style>
 
@@ -147,7 +161,7 @@
         </div>
     </div>
 </div> <!-- Row end  -->
-<div class="row g-3 mb-xl-3  justify-content-end">
+<div class="row g-3 mb-xl-3  justify-content-end mb-3">
     <div class="col-xl-4 col-lg-5 col-md-12">
         <div class="card profile-card flex-column mb-3">
             <div class="card-header py-3 d-flex justify-content-between bg-transparent border-bottom-0">
@@ -185,18 +199,23 @@
                                 <span class="ms-2">@Model.DietitianData.CityName</span>
                             </div>
                         </div>
-
-                        <div class="col-xl-12">
-                            <div class="d-flex">
-                                <a href="/Chat/?uId=@Model.UserData.ID" class="btn btn-outline-primary btn-block mt-2"> Sohbete Başla</a>
+                        @{
+                            Web.Helpers.ClaimHelper.SetUserIdentity(User.Identity);
+                        }
+                        @if (Web.Helpers.ClaimHelper.GetUserType() == Web.Models.UserTypes.Customer)
+                        {
+                            <div class="col-xl-12">
+                                <div class="d-flex">
+                                    <a href="/Chat/?uId=@Model.UserData.ID" class="btn btn-outline-primary btn-block mt-2"> Sohbete Başla</a>
+                                </div>
                             </div>
-                        </div>
+                        }
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-xxl-12 col-xl-8 col-lg-7 col-md-12">
+    <div class="col-xxl-12 col-xl-8 col-lg-7 col-md-12" style="max-height:100px !important;">
         <div class="row">
             <!--  g-3 mb-3 row-cols-1 row-cols-md-1 row-cols-lg-2 row-deck -->
             <div class="col">
@@ -206,37 +225,72 @@
                     </div>
                     <div class="card-body">
                         <div class="row g-3">
-                            <p class="mt-3">@Model.DietitianData.Bio</p>
+                            <p class="mt-3">@Model.DietitianData.Bio.Substring(0,250)</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-xxl-8 col-xl-8 col-lg-8 col-md-12 ">
-        <div class="card border p-3 mb-3">
-            <div class="card-header border-bottom"><h5 class="card-title">Yorum Yap</h5></div>
-            <div class="card-body">
-                <form class="form" method="post" id="commentForm" action="/Comment/Create/@Model.DietitianData.ID">
-                    <div class="form-group">
-                        <label>Skor</label>
-                        <select class="form-control" name="score" id="txt_Score">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Yorum</label>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 
-                        <textarea class="form-control" id="txt_Comment" rows="7"></textarea>
-                    </div>
-                    <button class="btn btn-primary float-right" type="button" onclick="sendCommentForm()">Gönder</button>
-                </form>
+    <style>
+        i {
+            font-family: FontAwesome
+        }
+    </style>
+
+    <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 ">
+        @if (Web.Helpers.ClaimHelper.GetUserType() == Web.Models.UserTypes.Dietitian)
+        {
+            <div class="col-12">
+
+                <h4>Danışanlarım</h4>
+                @if (Model.Customers == null || Model.Customers.Count == 0)
+                {
+                    <div class="alert alert-warning">Kayıt bulunamadı.</div>
+                }
+                else
+                {
+                    <ul class="list-group">
+                        @foreach (ContractDietitians dietitian in Model.Customers)
+                        {
+                            <li class="list-group-item"><a href="/Profile/@dietitian.UserID">@dietitian.DietitianName</a></li>
+                        }
+                    </ul>
+                }
+
             </div>
-        </div>
+        }
+    </div>
+    <div class="col-xxl-8 col-xl-8 col-lg-8 col-md-12 ">
+
+        @if (Model.IsActiveComment && Web.Helpers.ClaimHelper.GetUserType() == Web.Models.UserTypes.Customer)
+        {
+            <div class="card border p-3 mb-3">
+                <div class="card-header border-bottom"><h5 class="card-title">Yorum Yap</h5></div>
+                <div class="card-body">
+                    <form class="form" method="post" id="commentForm" action="/Comment/Create/@Model.DietitianData.ID">
+                        <div class="form-group">
+                            <label>Skor</label>
+                            <select class="form-control" name="score" id="txt_Score">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5" selected>5</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Yorum</label>
+
+                            <textarea class="form-control" id="txt_Comment" rows="2"></textarea>
+                        </div>
+                        <button class="btn btn-primary float-right" type="button" onclick="sendCommentForm()">Gönder</button>
+                    </form>
+                </div>
+            </div>
+        }
 
         <div class="card">
             <div class="card-header py-3 d-flex justify-content-between bg-transparent border-bottom-0">
@@ -248,85 +302,200 @@
             <div class="alert alert-danger p-3" id="no-comment-alert-card"> Henüz yorum yapılmamış.</div>
         </div>
     </div>
+
+    <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 ">
+        <div class="row">
+            <div class="col">
+                @if (Model.Calender != null)
+                {
+                    @if (Web.Helpers.ClaimHelper.GetUserType() == Web.Models.UserTypes.Dietitian && Model.IsUserOwner)
+                    {
+                        <div class="mb-4">
+                            <button class="btn btn-outline-success" type="button" id="btnCalendaerAdd">Ekle</button>
+                            <button class="btn btn-outline-warning" type="button" id="btnListCalender">Liste</button>
+                        </div>
+                    }
+                    <div id="calendar"></div>
+                    @*@(Html.DevExtreme().Scheduler()
+                        .ID("scheduler")
+                        .DataSource(Model.Calender)
+                        .TimeZone("Europe/Istanbul")
+                        .TextExpr("Text")
+                        .StartDateExpr("StartDate")
+                        .EndDateExpr("EndDate")
+                        .AllDayExpr("AllDay")
+                        .Editing(editing =>
+                        {
+                        editing.AllowAdding(false);
+                        editing.AllowDeleting(false);
+                        editing.AllowUpdating(false);
+                        editing.AllowResizing(false);
+                        editing.AllowDragging(false);
+                        })
+                        .Views(new[] {
+                        SchedulerViewType.Day,
+                        SchedulerViewType.Month
+                        })
+                        .CurrentView(SchedulerViewType.Month)
+                        .CurrentDate(DateTime.Today)
+                        .StartDayHour(9)
+                        .Height(600)
+                        )*@
+                }
+            </div>
+        </div>
+    </div>
 </div><!-- Row end  -->
+<!-- Modal -->
+<div class="modal fade" id="meetFormModal" tabindex="-1" role="dialog" aria-labelledby="specialOfferModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="specialOfferModalTitle">Randevu Ekle</h5>
+                <button type="button" class="closeModal close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form methos="post" class="">
+                    <div class="form-group">
+                        <label for="exampleSelect">Danışan</label>
+                        <select class="form-control" name="CustomerID">
+                            <option value="-1" selected>Seçiniz..</option>
+                            @foreach (User userItem in Model.AllCustomers)
+                            {
+                                <option value="@userItem.ID">@userItem.FullName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="startDate">Randevu Tarihi</label>
+                        <input type="date" name="SelectedDate" class="form-control" id="startDate">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit"
+                        class="btn btn-primary float-right closeModal">
+                    İptal
+                </button>
 
-
+                <button type="submit"
+                        class="btn btn-primary float-right saveMeet">
+                    Oluştur
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
 
-    const commentGetURLAddress = '/Comment/Dietitian/GetAll/@(Model.DietitianData.ID)';
-    function txt_Score_getSelectValue()
-        {
-           return document.getElementById("txt_Score").value;
+        const commentGetURLAddress = '/Comment/Dietitian/GetAll/@(Model.DietitianData.ID)';
+        function txt_Score_getSelectValue()
+            {
+               return document.getElementById("txt_Score").value;
 
+            }
+
+        function loadComments(){
+             axios.get(commentGetURLAddress)
+            .then(res=>{
+                console.log(res.data);
+                 $( "#comments" ).html('');
+                if(res.data.IsSuccsss)
+                   {
+                       //$( "#no-comment-alert-card" ).remove();
+
+                       if(res.data.Comments.length == 0){
+                           $("#no-comment-alert-card").show();
+                       }
+                    else{
+                         $("#no-comment-alert-card").hide();
+                       res.data.Comments.forEach(function(comment){
+                           let score = '';
+                           for (let i = 0; i < comment.Score; i++) {
+                                             score+=  '<i class="icofont-star"></i>';
+                                            }
+
+                           let commentTemplate = ' <div class="card card-white mt-1 post" data-id="' +comment.DataId +'">'+
+                                    '<div class="post-heading">'+
+                                       '<div class="float-left image">'+
+                                           ' <img src="' +comment.UserData.Avatar +'" class="img-circle avatar" alt="' +comment.UserData.FullName +'">'+
+                                       ' </div>'+
+                                        '<div class="float-left meta">'+
+                                           ' <div class="title h5">'+
+                                               ' <a href="#"><b>' +comment.UserData.FullName +'</b></a>'+
+                                                ' <span class="text-muted time">' +comment.Date +'</span>'+
+                                          '  </div>'+
+                                          score +
+                                           '<div>'+
+
+                                                '</div>'+
+                                      '  </div>'+
+                                   ' </div>'+
+                                   ' <div class="post-description">'+
+                                        '<p>' +comment.Text +'</p>'+
+                                    '</div>'+
+                                '</div>';
+
+                                $('#comments').append(commentTemplate);
+                        });
+                    }
+
+                   }
+            })
         }
 
-    function loadComments(){
-         axios.get(commentGetURLAddress)
-        .then(res=>{
-            console.log(res.data);
-             $( "#comments" ).html('');
-            if(res.data.IsSuccsss)
-               {
-                   $( "#no-comment-alert-card" ).remove();
-                   res.data.Comments.forEach(function(comment){
-                       let score = '';
-                       for (let i = 0; i < comment.Score; i++) {
-                                         score+=  '<i class="icofont-star"></i>';
-                                        }
+        function sendCommentForm(){
+            var datastring = $("#commentForm").serialize();
+            console.log(datastring);
 
-                       let commentTemplate = ' <div class="card card-white mt-1 post" data-id="' +comment.DataId +'">'+
-                                '<div class="post-heading">'+
-                                   '<div class="float-left image">'+
-                                       ' <img src="' +comment.UserData.Avatar +'" class="img-circle avatar" alt="' +comment.UserData.FullName +'">'+
-                                   ' </div>'+
-                                    '<div class="float-left meta">'+
-                                       ' <div class="title h5">'+
-                                           ' <a href="#"><b>' +comment.UserData.FullName +'</b></a>'+
-                                            ' <span class="text-muted time">' +comment.Date +'</span>'+
-                                      '  </div>'+
-                                      score +
-                                       '<div>'+
+            axios.post('/Comment/Create',{
+                comment: $("#txt_Comment").val(),
+                score: txt_Score_getSelectValue(),
+                dietitianId: @(Model.DietitianData.ID)
+            })
+            .then(res=>{
+                console.log(res)
+                Swal.fire(
+                  'Bildirim',
+                  res.data.Message,
+                 res.data.IsSuccsss ?  'success' : 'error'
+                )
+                if(res.data.IsSuccsss){
+                     $('#txt_Score').val('');
+                      $('#txt_Comment').val('');
+                }
+                loadComments();
+            })
+        }
 
-                                            '</div>'+
-                                  '  </div>'+
-                               ' </div>'+
-                               ' <div class="post-description">'+
-                                    '<p>' +comment.Text +'</p>'+
-                                '</div>'+
-                            '</div>';
-
-                            $('#comments').append(commentTemplate);
-                    });
-               }
-        })
-    }
-
-    function sendCommentForm(){
-        var datastring = $("#commentForm").serialize();
-        console.log(datastring);
-
-        axios.post('/Comment/Create',{
-            comment: $("#txt_Comment").val(),
-            score: txt_Score_getSelectValue(),
-            dietitianId: @(Model.DietitianData.ID)
-        })
-        .then(res=>{
-            console.log(res)
-            Swal.fire(
-              'Bildirim',
-              res.data.Message,
-             res.data.IsSuccsss ?  'success' : 'error'
-            )
-            if(res.data.IsSuccsss){
-                 $('#txt_Score').val('');
-                  $('#txt_Comment').val('');
-            }
+        $(document).ready(function () {
             loadComments();
-        })
-    }
 
-    $(document).ready(function () {
-        loadComments();
-    });
+        });
+
+
+        let calendarSettings = {
+            
+        }
+
+        $('#calendar').evoCalendar(calendarSettings);
+
+        $('#calendar').on('selectDate', function(event, newDate, oldDate) {
+            alert(newDate)
+        });
+
+        $("#btnCalendaerAdd").click(e=>{
+            $('#meetFormModal').modal('show');
+        })
+
+        $(".saveMeet").click(e=>{
+
+        })
+
+        $(".closeModal").click(e=>{
+            $('#meetFormModal').modal('hide');
+        })
 
 </script>

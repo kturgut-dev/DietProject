@@ -1,11 +1,26 @@
 ﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@using Core.Entities.Abstract
 @using DevExtreme.AspNet.Mvc
 @using Web.Models
 @model HomeViewData
 
+<style>
+    .mobileDesign  {
+        visibility:  hidden;
+    }
 
+    
+    @@media (max-width:700px) {
+        .mobileDesign  {
+            visibility:  visible;
+        }
+    }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.css" rel="stylesheet" />
 <div class="row">
     <div class="col-12">
         <div id="carouselExampleControls" class="carousel slide" width="250" data-ride="carousel">
@@ -27,69 +42,313 @@
             </a>
         </div>
     </div>
-    <div class="col-12">
+    <div class="col-12 mt-3">
         <h4>Diyetisyen Listesi</h4>
         <div class="row">
-            @if (Model.PopulerDietitians.Count == 0)
-            {
-                <div class="alert alert-warning">Kayıt bulunamadı.</div>
-            }
-            else
-            {
-                @foreach (ContractDietitians row in Model.PopulerDietitians)
-                {
-                    <div class="4">
-                        <div class="card" style="width: 18rem;">
-                            <img class="card-img-top" src="@row.Avatar" alt="Card image cap">
-                            <div class="card-body">
-                                <h5 class="card-title">@row.DietitianName</h5>
-                                <p class="card-text">@row.Bio</p>
-                                <a href="/Profile/@row.DietitianID" class="btn btn-primary">Profile Git</a>
+            <div class="col-md-12 col-lg-3 col-xl-3 col-xxl-2">
+                <div class="sticky-lg-top">
+                    <form id="frmSearch" method="get" action="#">
+
+                        <div class="card mb-3">
+                            <div class="reset-block">
+                                <div class="filter-title">
+                                    <h4 class="title">Filtreleme</h4>
+                                </div>
+                                <div class="filter-btn">
+                                    <button type="submit" class="btn btn-primary" href="#">Filtrele</button>
+                                    <a class="btn btn-primary" href="/">Temizle</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                }
-            }
-        </div>
-    </div>
-    <div class="col-12">
-        <div class="row">
-            <div class="col-6">
-                <h4>Danışanlarım</h4>
-                @if (Model.Dietitians.Count == 0)
+                        <div class="card mb-3">
+                            <div class="price-range-block">
+                                @* <div class="filter-title">
+                                    <a class="title" data-bs-toggle="collapse" href="#pricingTwo" role="button" aria-expanded="false">Şehir</a>
+                                    </div>*@
+                                <div class="collapse show" id="pricingTwo">
+                                    <div class="price-range">
+                                        <div class="price-amount flex-wrap">
+                                            <div class="mt-1 w-100">
+                                                <label class="fw-bold">Şehir</label>
+                                                <select id="city-select" name="city" multiple style="width:100% !important">
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card mb-3">
+                            <div class="price-range-block">
+                                <div class="filter-title">
+                                    <a class="title" data-bs-toggle="collapse" href="#pricingTwo" role="button" aria-expanded="false">Fiyat Aralığı</a>
+                                </div>
+                                <div class="collapse show" id="pricingTwo">
+                                    <div class="price-range">
+                                        <div class="price-amount flex-wrap">
+                                            <div class="amount-input mt-1">
+                                                <label class="fw-bold">Minimum</label>
+                                                <input type="number" min="0" id="minPrice" name="minPrice" class="form-control" value="0">
+                                            </div>
+                                            <div class="amount-input mt-1">
+                                                <label class="fw-bold">Maximum</label>
+                                                <input type="number" min="0" id="maxPrice" name="maxPrice" class="form-control" value="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="rating-block">
+                                <div class="filter-title">
+                                    <a class="title" data-bs-toggle="collapse" href="#rating" role="button" aria-expanded="false">Puan</a>
+                                </div>
+
+
+                                <div class="collapse show" id="rating">
+                                    <div class="filter-rating">
+                                        <ul>
+                                            <li>
+                                                <div class="rating-check">
+                                                    <input type="checkbox" name="star" value="5" id="rating-5">
+                                                    <label for="rating-5">
+                                                        <span></span>
+
+                                                    </label>
+                                                    <p>
+                                                        <i class="icofont-star"></i>
+                                                        <i class="icofont-star"></i>
+                                                        <i class="icofont-star"></i>
+                                                        <i class="icofont-star"></i>
+                                                        <i class="icofont-star"></i>
+                                                    </p>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="rating-check">
+                                                    <input type="checkbox" name="star" value="4" id="rating-4">
+                                                    <label for="rating-4"><span></span></label>
+                                                    <p>
+                                                        <i class="icofont-star"></i>
+                                                        <i class="icofont-star"></i>
+                                                        <i class="icofont-star"></i>
+                                                        <i class="icofont-star"></i>
+                                                    </p>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="rating-check">
+                                                    <input type="checkbox" name="star" value="3" id="rating-3">
+                                                    <label for="rating-3"><span></span></label>
+                                                    <p>
+                                                        <i class="icofont-star"></i>
+                                                        <i class="icofont-star"></i>
+                                                        <i class="icofont-star"></i>
+                                                    </p>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="rating-check">
+                                                    <input type="checkbox" name="star" value="2" id="rating-2">
+                                                    <label for="rating-2"><span></span></label>
+                                                    <p>
+                                                        <i class="icofont-star"></i>
+                                                        <i class="icofont-star"></i>
+                                                    </p>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="rating-check">
+                                                    <input type="checkbox" name="star" value="1" id="rating-1">
+                                                    <label for="rating-1"><span></span></label>
+                                                    <p>
+                                                        <i class="icofont-star"></i>
+                                                    </p>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-12 col-lg-9 col-xl-9 col-xxl-10">
+                <div class="card mb-3 bg-transparent p-2">
+
+                    @if (Model != null && Model.DietitianView.Count == 0)
+                    {
+                        <div class="alert alert-danger">Kayıt bulunamadı.</div>
+                    }
+                    else
+                    {
+                        @foreach (DietitianViewData dietitianData in Model.DietitianView)
+                        {
+                            <div class="card border-0 mb-1">
+                                <div class="form-check form-switch position-absolute bottom-1 end-0 py-3 px-3 d-none d-md-block">
+                                    <div class="pe-xl-5 pe-md-4 ps-md-0 px-3 mb-2">
+                                        <div class="text-muted small">Aylık Ücret</div>
+                                        <strong>@dietitianData.MonthlyPrice</strong>
+                                    </div>
+                                </div>
+                                <div class="form-check form-switch position-absolute bottom-0 end-0 py-3 px-3 d-none d-md-block">
+                                    <a href="/Profile/@(dietitianData.UserID)" class="btn btn-primary">Profili İncele</a>
+                                </div>
+                                <div class="card-body d-flex align-items-center flex-column flex-md-row">
+                                    <a href="product-detail.html">
+                                        <img class="w120 rounded img-fluid" src="~/assets/images/profile_av.svg" alt="">
+                                    </a>
+                                    <div class="ms-md-4 m-0 mt-4 mt-md-0 text-md-start w-100">
+                                        <div class="row">
+                                            <div class="col-12 col-md-2">
+                                                <h6 class="mb-3 fw-bold">
+                                                    @dietitianData.FullName
+                                                    <span class="text-muted small fw-light d-block">Onaylı Diyetisyen</span>
+                                                </h6>
+                                            </div>
+                                            <div class="col-12  col-md-3">
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <div class="pe-xl-5 pe-md-4 ps-md-0 px-3 mb-2">
+                                                            <div class="text-muted small">Puanlama</div>
+                                                            <strong><i class="icofont-star text-warning"></i>@dietitianData.ScoreAvg <span class="text-muted">(@dietitianData.CommentCount)</span></strong>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-6">
+                                                        <div class="pe-xl-5 pe-md-4 ps-md-0 px-3 mb-2">
+                                                            <div class="text-muted small">Şehir</div>
+                                                            <strong>@dietitianData.Sehir</strong>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <h6>Bio</h6>
+                                        <div class="d-flex flex-row flex-wrap ">
+
+                                            <div class="pe-xl-5 pe-md-4 ps-md-0 px-3 mb-2">
+                                                @dietitianData.ShortBio
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-12 col-md-7 mobileDesign">
+                                            <div class="">
+                                                <a href="/Profile/@(dietitianData.UserID)" class="btn btn-primary">Profili İncele</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+
+
+                </div>
+            </div>
+
+            @*@if (Model.PopulerDietitians.Count == 0)
                 {
-                    <div class="alert alert-warning">Kayıt bulunamadı.</div>
+                <div class="alert alert-warning">Kayıt bulunamadı.</div>
                 }
                 else
                 {
-                    <ul class="list-group">
-                        @foreach (ContractDietitians dietitian in Model.Dietitians)
-                        {
-                            <li class="list-group-item"><a href="/Profile/@dietitian.DietitianID">@dietitian.DietitianName</a></li>
-                        }
-                    </ul>
+                @foreach (ContractDietitians row in Model.PopulerDietitians)
+                {
+                <div class="4">
+                <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="@row.Avatar" alt="Card image cap">
+                <div class="card-body">
+                <h5 class="card-title">@row.DietitianName</h5>
+                <p class="card-text">@row.Bio</p>
+                <a href="/Profile/@row.UserID" class="btn btn-primary">Profile Git</a>
+                </div>
+                </div>
+                </div>
                 }
-            </div>
-            <div class="col-6">
-                @(Html.DevExtreme().Scheduler()
-                .ID("scheduler")
-                .DataSource(Model.Calender)
-                .TimeZone("Europe/Istanbul")
-                .TextExpr("Text")
-                .StartDateExpr("StartDate")
-                .EndDateExpr("EndDate")
-                .AllDayExpr("AllDay")
-                .Views(new[] {
-                SchedulerViewType.Day,
-                SchedulerViewType.Month
-                })
-                .CurrentView(SchedulerViewType.Month)
-                .CurrentDate(DateTime.Today)
-                .StartDayHour(9)
-                .Height(600)
-                )
-            </div>
+                }*@
         </div>
     </div>
+
 </div>
+
+<script>
+    var slimSelector = new SlimSelect({
+        select: '#city-select',
+        'placeholder': 'Seçiniz...'
+      })
+
+       let stars = getURLParam('star');
+          let cityList = getURLParam('city');
+          let minPrice = getURLParam('minPrice');
+          let maxPrice = getURLParam('maxPrice');
+
+      var $dropdown = $("#city-select");
+
+      function cityListFill(){
+          axios.get('/welcome/CityList')
+          .then(res=>{
+               $.each(res.data, function() {
+                  $dropdown.append($("<option "+(cityList!=null&&cityList.includes(this.name) ? 'selected' : '')+"/>").val(this.name).text(this.name));
+              });
+          })
+      }
+
+
+      function getURLParam(key,target = window.location.href){
+          var values = [];
+          if (!target) target = location.href;
+
+          key = key.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+
+          var pattern = key + '=([^&#]+)';
+          var o_reg = new RegExp(pattern,'ig');
+          while (true){
+              var matches = o_reg.exec(target);
+              if (matches && matches[1]){
+                  values.push(matches[1]);
+              } else {
+                  break;
+              }
+          }
+
+          if (!values.length){
+              return null;
+          } else {
+              return values.length == 1 ? values[0] : values;
+          }
+      }
+
+
+
+      function filterFill() {
+          if(stars!=null){
+              stars.forEach((star, index) => {
+                 $('#rating-'+star).prop('checked', true);
+              });
+
+          }
+          if(minPrice!=null)
+              $("#minPrice").val(minPrice)
+          if(maxPrice!=null)
+              $("#maxPrice").val(maxPrice)
+
+          if(cityList!=null)
+          {
+               cityList.forEach((city, index) => {
+                 cityList[index] = decodeURI(city);
+              });
+          }
+      }
+
+      cityListFill();
+      filterFill();
+
+</script>
 

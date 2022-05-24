@@ -1,4 +1,6 @@
 ﻿using Core.DataAccess;
+using Core.Entities;
+using Core.Entities.Abstract;
 using DietProject.Core.DataAccess;
 using DietProject.Core.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -23,6 +25,7 @@ namespace Web.Controllers
         public DietDetailOperations dietDetailOperations { get; set; }
         public FoodOperations foodOperations { get; set; }
         public MeasureUnitsOperations measureUnitsOperations { get; set; }
+        public MeetingOperations meetingOperations { get; set; }
         public HomeController(IDbContextFactory<DietProjectContext> contextFactory)
         {
             userOperations = new UserOperations(contextFactory);
@@ -32,49 +35,68 @@ namespace Web.Controllers
             dietDetailOperations = new DietDetailOperations(contextFactory);
             foodOperations = new FoodOperations(contextFactory);
             measureUnitsOperations = new MeasureUnitsOperations(contextFactory);
+            meetingOperations = new MeetingOperations(contextFactory);
         }
-        public IActionResult Index()
+        //[HttpGet("/portal")]
+        public ActionResult Index([FromQuery(Name = "city")] string[] city, [FromQuery(Name = "minPrice")] int? minPrice,
+            [FromQuery(Name = "maxPrice")] int? maxPrice, [FromQuery(Name = "star")] int[] stars)
         {
             ClaimHelper.SetUserIdentity(User.Identity);
             HomeViewData viewData = new HomeViewData();
-            viewData.Sliders.Add(new Slider() { ImageUrl = "https://picsum.photos/1920/1080" });
-            viewData.Sliders.Add(new Slider() { ImageUrl = "https://picsum.photos/1920/1080" });
+
+            List<DietitianViewData> dietitansViewData = dietitianOperations.GetAllDietitians(city, minPrice, maxPrice, stars);
+            viewData.DietitianView = dietitansViewData;
+
+            viewData.Sliders.Add(new Slider() { ImageUrl = "https://media-cldnry.s-nbcnews.com/image/upload/newscms/2019_51/1406125/fruits-veggies-today-main-190130.jpg" });
+            viewData.Sliders.Add(new Slider() { ImageUrl = "https://www.sgeyazilim.com/yonetimpaneli/resimler1/1024___202131714175165___diettime1_png.png" });
             IList<Dietitian> dietitians = dietitianOperations.GetAllTOPDietitians();
 
             foreach (Dietitian dietitian in dietitians)
             {
                 ContractDietitians row = new ContractDietitians();
-                row.DietitianID = dietitian.ID;
+                row.UserID = dietitian.ID;
                 row.DietitianName = userOperations.Get(x => x.ID == dietitian.UserID).FullName;
                 row.Avatar = userOperations.Get(x => x.ID == dietitian.UserID).Avatar;
                 row.Bio = dietitian.Bio;
                 viewData.PopulerDietitians.Add(row);
             }
-
-            IList<Contract> contracts = contractOperations.GetAll(x => x.IsApproved == true && x.ContractEndDate >= DateTime.Today && x.ContractStartDate <= DateTime.Today && x.CustomerID == ClaimHelper.UserID);
-            foreach (Contract item in contracts)
+            if (Web.Helpers.ClaimHelper.GetUserType() == Web.Models.UserTypes.Dietitian)
             {
-                IList<DietDetail> details = dietDetailOperations.GetAll(x => x.ContractID == item.ID);
-
-                foreach (DietDetail detail in details)
+                IList<Contract> contracts = contractOperations.GetAll(x => x.IsApproved == true && x.ContractEndDate >= DateTime.Today && x.ContractStartDate <= DateTime.Today && x.CustomerID == ClaimHelper.UserID);
+                foreach (Contract item in contracts)
                 {
-                    string foodName = foodOperations.Get(x => x.ID == detail.FoodID).FoodName;
-                    string measureUnitName = measureUnitsOperations.Get(x => x.ID == detail.MeasureUnitID).MeasureUnitName;
-                    Calender row = new Calender();
-                    row.StartDate = detail.CreatedDate;
-                    row.EndDate = detail.CreatedDate;
-                    row.Text = string.Format("{0} {1} {2} - {3}", detail.Quantity, measureUnitName, foodName, detail.MealType);
-                    viewData.Calender.Add(row);
+                    IList<DietDetail> details = dietDetailOperations.GetAll(x => x.ContractID == item.ID);
+
+                    //foreach (DietDetail detail in details)
+                    //{
+                    //    string foodName = foodOperations.Get(x => x.ID == detail.FoodID).FoodName;
+                    //    string measureUnitName = measureUnitsOperations.Get(x => x.ID == detail.MeasureUnitID).MeasureUnitName;
+                    //    Calender row = new Calender();
+                    //    row.StartDate = detail.CreatedDate;
+                    //    row.EndDate = detail.CreatedDate;
+                    //    row.Text = string.Format("{0} {1} {2} - {3}", detail.Quantity, measureUnitName, foodName, detail.MealType);
+                    //    viewData.Calender.Add(row);
+                    //}
+
+
+                    ContractDietitians dietRow = new ContractDietitians();
+                    dietRow.UserID = item.CustomerID;
+                    dietRow.DietitianName = userOperations.Get(x => x.ID == item.CustomerID).FullName;
+                    dietRow.Avatar = userOperations.Get(x => x.ID == item.CustomerID).Avatar;
+                    dietRow.Bio = String.Empty;
+                    //dietRow.Bio = dietitianOperations.Get(x => x.UserID == item.DietitanID).Bio;
+                    viewData.Customers.Add(dietRow);
                 }
 
 
-                ContractDietitians dietRow = new ContractDietitians();
-                dietRow.DietitianID = item.DietitanID;
-                dietRow.DietitianName = userOperations.Get(x => x.ID == item.DietitanID).FullName;
-                dietRow.Avatar = userOperations.Get(x => x.ID == item.DietitanID).Avatar;
-                dietRow.Bio = dietitianOperations.Get(x => x.UserID == item.DietitanID).Bio;
-                viewData.Dietitians.Add(dietRow);
+
             }
+            else
+            {
+                viewData.Calender = null;
+                viewData.Customers = null;
+            }
+
 
             return View(viewData);
         }
@@ -102,11 +124,11 @@ namespace Web.Controllers
                 Text = "Anasayfa"
             });
 
-            menus.Add(new
-            {
-                Url = "/portal",
-                Text = "Portal"
-            });
+            //menus.Add(new
+            //{
+            //    Url = "/portal",
+            //    Text = "Portal"
+            //});
             if (ClaimHelper.IsAdmin)
             {
                 menus.Add(new
@@ -120,11 +142,36 @@ namespace Web.Controllers
                 Url = "/Chat/Index",
                 Text = "Sohbet"
             });
-            menus.Add(new
+
+            if (ClaimHelper.GetUserType() == UserTypes.Dietitian)
+                menus.Add(new
+                {
+                    Url = "/Profile/" + ClaimHelper.UserID,
+                    //Url = "/Profile/" + dietitianOperations.Get(x=>x.UserID == ClaimHelper.UserID).ID,
+                    Text = "Hesabım"
+                });
+            else
             {
-                Url = "/Account",
-                Text = "Hesabım"
-            });
+                if (contractOperations.Get(x => x.IsApproved == true && x.CustomerID == ClaimHelper.UserID)!=null)
+                {
+                    menus.Add(new
+                    {
+                        Url = "/DietDetail/Scheduler/" + contractOperations.Get(x => x.IsApproved == true && x.CustomerID == ClaimHelper.UserID).ID,
+                        //Url = "/Profile/" + dietitianOperations.Get(x=>x.UserID == ClaimHelper.UserID).ID,
+                        Text = "Hesabım"
+                    });
+                }
+                else
+                {
+                    menus.Add(new
+                    {
+                        Url = "/DietDetail/Scheduler/" + -1,
+                        Text = "Hesabım"
+                    });
+                }
+        
+            }
+
             return Ok(menus);
         }
 

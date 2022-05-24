@@ -40,14 +40,23 @@
                                 <td>
                                     @if (row.IsApproved == false)
                                     {
-                                        <a class="btn btn-primary" 
-                                        href="/Contract/Approve?cId=@(row.ID)&approve=1">Onayla</a>
-                                        <a class="btn btn-danger" 
-                                         href="/Contract/Approve?cId=@(row.ID)&approve=0">Ret Et</a>
+                                        @if (Web.Helpers.ClaimHelper.GetUserType() == Web.Models.UserTypes.Customer)
+                                        {
+                                            <a class="btn btn-primary"
+                                   href="/Contract/Approve?cId=@(row.ID)&approve=1">Onayla</a>
+                                            <a class="btn btn-danger"
+                                   href="/Contract/Approve?cId=@(row.ID)&approve=0">Ret Et</a>
+                                        }
+                                        else
+                                        {
+                                            <a href="javascript:void(0)" class="btn btn-outline-secondary">Onay Bekliyor</a>
+                                        }
                                     }
                                     else
-                                    {
-                                        <a class="btn btn-warning" href="/DietDetail/Scheduler/@(row.ID)">Diyet Takvimim</a>
+                                    {@if (Web.Helpers.ClaimHelper.GetUserType() == Web.Models.UserTypes.Dietitian)
+                                        {
+                                        <a class="btn btn-warning" href="/DietDetail/Scheduler/@(row.ID)">Diyet Takvimi</a>
+                                    }
                                     }
                                     <a class="btn btn-outline-danger" href="/Contract/Delete/@(row.ID)">Sil</a>
                                 </td>

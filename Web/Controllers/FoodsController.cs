@@ -23,7 +23,7 @@ namespace Web.Controllers
         public IActionResult Index()
         {
             ClaimHelper.SetUserIdentity(User.Identity);
-            return Ok(foodOperations.GetAll(x => x.CreatedBy == ClaimHelper.UserID));
+            return Ok(foodOperations.GetAll());
         }
 
         [HttpPost("/Foods/Create")]
