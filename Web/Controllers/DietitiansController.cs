@@ -116,8 +116,19 @@ namespace Web.Controllers
                     res.Calender.Add(newRow);
                 }
 
+            //IList<User> userList = _userOperations.GetAll();
+            //res.AllCustomers = (List<User>)userList;
+
+            List<User> rawData = new List<User>();
             IList<User> userList = _userOperations.GetAll();
-            res.AllCustomers = (List<User>)userList;
+            foreach (User item in userList)
+            {
+                if (customerOperations.Get(x => x.UserID == item.ID) != null)
+                {
+                    rawData.Add(item);
+                }
+            }
+            res.AllCustomers = (List<User>)rawData;
             return View(res);
         }
 
