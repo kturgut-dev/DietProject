@@ -21,6 +21,7 @@ namespace Web.Controllers
         public ContractOperations contractOperations { get; set; }
         public DietDetailOperations dietDetailOperations { get; set; }
         public MeetingOperations meetingOperations { get; set; }
+        public CustomerOperations customerOperations { get; set; }
         public DietitiansController(IDbContextFactory<DietProjectContext> contextFactory)
         {
             _dietitianOperations = new DietitianOperations(contextFactory);
@@ -28,6 +29,7 @@ namespace Web.Controllers
             contractOperations = new ContractOperations(contextFactory);
             dietDetailOperations = new DietDetailOperations(contextFactory);
             meetingOperations = new MeetingOperations(contextFactory);
+            customerOperations = new CustomerOperations(contextFactory);
         }
         // GET: DietitiansController
         public ActionResult Index()
