@@ -19,11 +19,17 @@ namespace Web.Models
     }
     public class Calender
     {
+        [Newtonsoft.Json.JsonProperty("id")]
         public string Id { get; set; }
+        [Newtonsoft.Json.JsonProperty("description")]
         public string Text { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public string date { get { return StartDate.ToString("dd/MM/yyyy"); }  }
         public bool AllDay { get; set; } = true;
+        public bool everyYear { get; set; } = true;
+        public string color { get; set; } = "#63d867";
+        public string type { get; set; } = "birthday";
     }
     public class HomeViewData
     {

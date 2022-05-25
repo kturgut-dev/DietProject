@@ -111,6 +111,7 @@ namespace Web.Controllers
                     newRow.Id = item.ID.ToString();
                     newRow.StartDate = item.SelectedDate;
                     newRow.EndDate = item.SelectedDate;
+                    newRow.Text = text;
                     newRow.AllDay = true;
                     res.Calender.Add(newRow);
                 }

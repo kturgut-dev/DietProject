@@ -20,10 +20,14 @@ namespace Web.Controllers
         }
 
         [HttpGet("/Meet/{dietitianUserId}")]
-        public IActionResult GetAll(Int64 dietitianUserId, [FromQuery(Name = "date")]DateTime. date)
+        public IActionResult GetAll(Int64 dietitianUserId, [FromQuery(Name = "date")]string date)
         {
+            if (string.IsNullOrEmpty(date))
+                return Ok(new ResponseModel(true, "OK", meetingOperations.GetAll(x => x.DietitianID == dietitianUserId )));
+            
+            DateTime _date = Convert.ToDateTime(date);
             //ClaimHelper.SetUserIdentity(User.Identity);
-            return Ok(new ResponseModel(true, "OK", meetingOperations.GetAll(x => x.DietitianID == dietitianUserId)));
+            return Ok(new ResponseModel(true, "OK", meetingOperations.GetAll(x => x.DietitianID == dietitianUserId && x.SelectedDate == _date)));
         }
 
         [HttpPost]
