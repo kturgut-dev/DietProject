@@ -69,10 +69,11 @@ namespace Web.Controllers
             else
             {
 
-            }
             viewData.UserData = userOperations.Get(x => x.ID == ClaimHelper.UserID);
             viewData.CustomerData = customerOperations.Get(x => x.UserID == ClaimHelper.UserID);
             viewData.DietDetailData = res;
+            }
+
             return View(viewData);
         }
 

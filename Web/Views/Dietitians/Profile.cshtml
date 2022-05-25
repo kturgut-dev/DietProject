@@ -225,7 +225,7 @@
                     </div>
                     <div class="card-body">
                         <div class="row g-3">
-                            <p class="mt-3">@Model.DietitianData.Bio.Substring(0,250)</p>
+                            <p class="mt-3">@(Model.DietitianData.Bio==null ?"":Model.DietitianData.Bio.Substring(0,250))</p>
                         </div>
                     </div>
                 </div>
@@ -272,7 +272,7 @@
                 <div class="card-body">
                     <form class="form" method="post" id="commentForm" action="/Comment/Create/@Model.DietitianData.ID">
                         <div class="form-group">
-                            <label>Skor</label>
+                            <label>Puan</label>
                             <select class="form-control" name="score" id="txt_Score">
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -450,19 +450,19 @@
             var datastring = $("#commentForm").serialize();
             console.log(datastring);
 
-            axios.post('/Comment/Create',{
+            $.post('/Comment/Create',{
                 comment: $("#txt_Comment").val(),
                 score: txt_Score_getSelectValue(),
                 dietitianId: @(Model.DietitianData.ID)
             })
-            .then(res=>{
+            .done(res=>{
                 console.log(res)
                 Swal.fire(
                   'Bildirim',
-                  res.data.Message,
-                 res.data.IsSuccsss ?  'success' : 'error'
+                  res.Message,
+                 res.IsSuccsss ?  'success' : 'error'
                 )
-                if(res.data.IsSuccsss){
+                if(res.IsSuccsss){
                      $('#txt_Score').val('');
                       $('#txt_Comment').val('');
                 }
