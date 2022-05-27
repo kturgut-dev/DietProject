@@ -25,7 +25,7 @@ namespace Web.Models
         public string Text { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public string date { get { return StartDate.ToString("dd/MM/yyyy"); }  }
+        public string date { get { return StartDate.ToString("MM-dd-yyyy"); }  }
         public bool AllDay { get; set; } = true;
         public bool everyYear { get; set; } = true;
         public string color { get; set; } = "#63d867";
