@@ -603,9 +603,9 @@
                Swal.fire(
                  'Bildirim',
                  res.Message,
-                res.IsSuccsss ?  'success' : 'error'
+                res.IsSuccess ?  'success' : 'error'
                )
-               if(res.IsSuccsss){
+               if(res.IsSuccess){
                     $('#lookupUser').val('');
                      $('#selectedDate').val('');
                        $('#meetFormModal').modal('hide');
