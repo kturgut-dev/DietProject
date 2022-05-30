@@ -150,7 +150,6 @@ namespace Web.Controllers
             return View(res);
         }
 
-
         public ActionResult Approve(Int64 id)
         {
             Dietitian result = _dietitianOperations.Get(x => x.ID == id);

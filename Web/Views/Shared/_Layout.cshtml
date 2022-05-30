@@ -52,6 +52,54 @@
                  alert('aa')
                  $( ".sidebar" ).show();
              })
+
+
+$(function(){
+             $("#uploadImage").click(function(e){
+        $('#upload').trigger('click');
+    })
+     $('#upload').change(function(e){
+        console.log(e.target.files[0])
+
+        var tgt = e.target || window.event.srcElement,
+        files = tgt.files;
+
+        if (FileReader && files && files.length) {
+            var fr = new FileReader();
+            fr.onload = function () {
+                document.getElementById("uploadImage").src = fr.result;
+            }
+            fr.readAsDataURL(files[0]);
+
+            $("#savePic").show();
+        }
+     });
+
+      $("#savePic").hide();
+
+     $("#savePic").click(e=>{
+            var file_data = $('#upload').prop('files')[0];
+            var form_data = new FormData();    
+            form_data.append('Avatar', file_data);
+            $.post({
+                url: '/User/ChangeProfileImage', // <-- point to server-side PHP script 
+                dataType: 'json',  // <-- what to expect back from the PHP script, if anything
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: form_data,                         
+                type: 'post',
+                success: function(res){
+                   console.log(res)
+                   Swal.fire(
+                     'Bildirim',
+                     res.Message,
+                    res.IsSuccess ?  'success' : 'error'
+                   )
+                }
+            });
+     })
+     });
     </script>
 
     <style>

@@ -6,7 +6,6 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     Web.Helpers.ClaimHelper.SetUserIdentity(User.Identity);
-
 }
 @model Web.Models.DietitianDTOView
 
@@ -20,6 +19,25 @@
 
 <style>
 
+    #uploadImage i {
+        visibility: hidden;
+    }
+
+
+    #uploadImage:hover i {
+        visibility: visible;
+    }
+
+    .label {
+        display: inline-block;
+        background-color: indigo;
+        color: white;
+        padding: 0.5rem;
+        font-family: sans-serif;
+        border-radius: 0.3rem;
+        cursor: pointer;
+        margin-top: 1rem;
+    }
 
     .card-white .card-heading {
         color: #333;
@@ -169,7 +187,21 @@
                 <div class="profile-info w-100">
                     <div class="row justify-content-center">
                         <div class="col-4">
-                            <img src="@Model.UserData.Avatar" alt="@Model.UserData.Avatar" class="avatar xl img-thumbnail shadow-sm">
+                            <div class="row">
+                                <div class="12" class="imgUpload avatar xl img-thumbnail shadow-sm mb-3">
+                                    <img id="uploadImage" src="@Model.UserData.Avatar" alt="@Model.UserData.Avatar" class="avatar xl img-thumbnail shadow-sm">
+                                </div>
+                                @if (Model.UserData.ID == Web.Helpers.ClaimHelper.UserID)
+                                {
+                                    <div class="12">
+                                        <input type="file" id="upload" accept="image/x-png,image/gif,image/jpeg" hidden />
+                                        @*<label class="label" for="upload">Dosya Seç</label>*@
+                                    </div>
+                                    <div class="12">
+                                        <button class="btn btn-outline-primary" id="savePic" type="button">Kaydet</button>
+                                    </div>
+                                }
+                            </div>
                         </div>
                         <div class="col-12">
                             <h6 class="mb-0 mt-2 ml-0 mr-0  fw-bold d-block fs-6 text-center">@Model.UserData.FullName</h6>
@@ -197,9 +229,7 @@
                                 <span class="ms-2">@Model.DietitianData.CityName</span>
                             </div>
                         </div>
-                        @{
-                            Web.Helpers.ClaimHelper.SetUserIdentity(User.Identity);
-                        }
+
                         @if (Web.Helpers.ClaimHelper.GetUserType() == Web.Models.UserTypes.Customer)
                         {
                             <div class="col-xl-12">
@@ -395,153 +425,196 @@
 <script src="https://cdn.jsdelivr.net/npm/evo-calendar@1.1.2/evo-calendar/js/evo-calendar.min.js"></script>
 
 <script>
+ //$("#uploadImage").click(function(e){
+ //       $('#upload').trigger('click');
+ //   })
+ //    $('#upload').change(function(e){
+ //       console.log(e.target.files[0])
 
-    const commentGetURLAddress = '/Comment/Dietitian/GetAll/@(Model.DietitianData.ID)';
-    function txt_Score_getSelectValue()
-        {
-           return document.getElementById("txt_Score").value;
+ //       var tgt = e.target || window.event.srcElement,
+ //       files = tgt.files;
 
-        }
+ //       if (FileReader && files && files.length) {
+ //           var fr = new FileReader();
+ //           fr.onload = function () {
+ //               document.getElementById("uploadImage").src = fr.result;
+ //           }
+ //           fr.readAsDataURL(files[0]);
 
-    function loadComments(){
-         axios.get(commentGetURLAddress)
-        .then(res=>{
-             $( "#comments" ).html('');
-            if(res.data.IsSuccsss)
-               {
-                   //$( "#no-comment-alert-card" ).remove();
+ //           $("#savePic").show();
+ //       }
+ //    });
 
-                   if(res.data.Comments.length == 0){
-                       $("#no-comment-alert-card").show();
+ //     $("#savePic").hide();
+
+ //    $("#savePic").click(e=>{
+ //           var file_data = $('#upload').prop('files')[0];
+ //           var form_data = new FormData();    
+ //           form_data.append('Avatar', file_data);
+ //           $.post({
+ //               url: '/User/ChangeProfileImage', // <-- point to server-side PHP script 
+ //               dataType: 'json',  // <-- what to expect back from the PHP script, if anything
+ //               cache: false,
+ //               contentType: false,
+ //               processData: false,
+ //               data: form_data,                         
+ //               type: 'post',
+ //               success: function(res){
+ //                  console.log(res)
+ //                  Swal.fire(
+ //                    'Bildirim',
+ //                    res.Message,
+ //                   res.IsSuccess ?  'success' : 'error'
+ //                  )
+ //               }
+ //           });
+ //    })
+
+       const commentGetURLAddress = '/Comment/Dietitian/GetAll/@(Model.DietitianData.ID)';
+       function txt_Score_getSelectValue()
+           {
+              return document.getElementById("txt_Score").value;
+           }
+
+       function loadComments(){
+            axios.get(commentGetURLAddress)
+           .then(res=>{
+                $( "#comments" ).html('');
+               if(res.data.IsSuccsss)
+                  {
+                      //$( "#no-comment-alert-card" ).remove();
+
+                      if(res.data.Comments.length == 0){
+                          $("#no-comment-alert-card").show();
+                      }
+                   else{
+                        $("#no-comment-alert-card").hide();
+                      res.data.Comments.forEach(function(comment){
+                          let score = '';
+                          for (let i = 0; i < comment.Score; i++) {
+                                            score+=  '<i class="icofont-star"></i>';
+                                           }
+
+                          let commentTemplate = ' <div class="card card-white mt-1 post" data-id="' +comment.DataId +'">'+
+                                   '<div class="post-heading">'+
+                                      '<div class="float-left image">'+
+                                          ' <img src="' +comment.UserData.Avatar +'" class="img-circle avatar" alt="' +comment.UserData.FullName +'">'+
+                                      ' </div>'+
+                                       '<div class="float-left meta">'+
+                                          ' <div class="title h5">'+
+                                              ' <a href="#"><b>' +comment.UserData.FullName +'</b></a>'+
+                                               ' <span class="text-muted time">' +comment.Date +'</span>'+
+                                         '  </div>'+
+                                         score +
+                                          '<div>'+
+
+                                               '</div>'+
+                                     '  </div>'+
+                                  ' </div>'+
+                                  ' <div class="post-description">'+
+                                       '<p>' +comment.Text +'</p>'+
+                                   '</div>'+
+                               '</div>';
+
+                               $('#comments').append(commentTemplate);
+                       });
                    }
-                else{
-                     $("#no-comment-alert-card").hide();
-                   res.data.Comments.forEach(function(comment){
-                       let score = '';
-                       for (let i = 0; i < comment.Score; i++) {
-                                         score+=  '<i class="icofont-star"></i>';
-                                        }
 
-                       let commentTemplate = ' <div class="card card-white mt-1 post" data-id="' +comment.DataId +'">'+
-                                '<div class="post-heading">'+
-                                   '<div class="float-left image">'+
-                                       ' <img src="' +comment.UserData.Avatar +'" class="img-circle avatar" alt="' +comment.UserData.FullName +'">'+
-                                   ' </div>'+
-                                    '<div class="float-left meta">'+
-                                       ' <div class="title h5">'+
-                                           ' <a href="#"><b>' +comment.UserData.FullName +'</b></a>'+
-                                            ' <span class="text-muted time">' +comment.Date +'</span>'+
-                                      '  </div>'+
-                                      score +
-                                       '<div>'+
+                  }
+           })
+       }
 
-                                            '</div>'+
-                                  '  </div>'+
-                               ' </div>'+
-                               ' <div class="post-description">'+
-                                    '<p>' +comment.Text +'</p>'+
-                                '</div>'+
-                            '</div>';
+       function sendCommentForm(){
+           var datastring = $("#commentForm").serialize();
+           console.log(datastring);
 
-                            $('#comments').append(commentTemplate);
-                    });
-                }
-
+           $.post('/Comment/Create',{
+               comment: $("#txt_Comment").val(),
+               score: txt_Score_getSelectValue(),
+               dietitianId: @(Model.DietitianData.ID)
+           })
+           .done(res=>{
+               Swal.fire(
+                 'Bildirim',
+                 res.Message,
+                res.IsSuccess ?  'success' : 'error'
+               )
+               if(res.IsSuccsss){
+                    $('#txt_Score').val('');
+                     $('#txt_Comment').val('');
                }
-        })
-    }
+               loadComments();
+           })
+       }
 
-    function sendCommentForm(){
-        var datastring = $("#commentForm").serialize();
-        console.log(datastring);
+       $(document).ready(function () {
+           loadComments();
+       });
 
-        $.post('/Comment/Create',{
-            comment: $("#txt_Comment").val(),
-            score: txt_Score_getSelectValue(),
-            dietitianId: @(Model.DietitianData.ID)
-        })
-        .done(res=>{
-            Swal.fire(
-              'Bildirim',
-              res.Message,
-             res.IsSuccsss ?  'success' : 'error'
-            )
-            if(res.IsSuccsss){
-                 $('#txt_Score').val('');
-                  $('#txt_Comment').val('');
-            }
-            loadComments();
-        })
-    }
+       function InitCalendar(){
+           $('#calendar').evoCalendar( {
+                todayHighlight:false,
+                  selectDate:"09/10/2020",
+                  format: "mm/dd/yyyy",
+                  titleFormat: "MM",
+                  sidebarToggler: true,
+                  sidebarDisplayDefault: false,
+                  eventListToggler: false,
+                  eventDisplayDefault: false,
+                  calendarEvents: [ ]
+           });
+       }
 
-    $(document).ready(function () {
-        loadComments();
-    });
+      let calendarEvents= @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Calender.ToList()))
 
-    function InitCalendar(){
-        $('#calendar').evoCalendar( {
-             todayHighlight:false,
-               selectDate:"09/10/2020",
-               format: "mm/dd/yyyy",
-               titleFormat: "MM",
-               sidebarToggler: true,
-               sidebarDisplayDefault: false,
-               eventListToggler: false,
-               eventDisplayDefault: false,
-               calendarEvents: [ ]
-        });
-    }
+       calendarEvents.forEach(function(fcalendar,index){
+    //calendarEvents[index].date = new Date(fcalendar.date);
+                   });
 
-   let calendarEvents= @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Calender.ToList()))
+       let calendarSettings = {
+           calendarEvents: calendarEvents
+       }
 
-    calendarEvents.forEach(function(fcalendar,index){
- //calendarEvents[index].date = new Date(fcalendar.date);
-});
+       $('#calendar').evoCalendar(calendarSettings);
 
-    let calendarSettings = {
-        calendarEvents: calendarEvents
-    }
+       $('#calendar').on('selectDate', function(event, newDate, oldDate) {
+           let d = new Date(newDate);
+           let senderDate = d.getDay() + '-' + d.getMonth() + '-' + d.getFullYear()
+           $.get( "/Meet/@Model.UserData.ID" ).done(res=>{
+               console.log(res)
+               calendarEventsArray = [];
+               res.Data.forEach((item)=>{
 
-    $('#calendar').evoCalendar(calendarSettings);
+               });
+               //InitCalendar();
+           })
+       });
 
-    $('#calendar').on('selectDate', function(event, newDate, oldDate) {
-        let d = new Date(newDate);
-        let senderDate = d.getDay() + '-' + d.getMonth() + '-' + d.getFullYear()
-        $.get( "/Meet/@Model.UserData.ID" ).done(res=>{
-            console.log(res)
-            calendarEventsArray = [];
-            res.Data.forEach((item)=>{
+       $("#btnCalendaerAdd").click(e=>{
+           $('#meetFormModal').modal('show');
+       })
 
-            });
-            //InitCalendar();
-        })
-    });
+       $(".saveMeet").click(e=>{
+           $.post("/Meet/Add",{
+             CustomerID:  $('#lookupUser').val(),
+             SelectedDate: $('#selectedDate').val()
+           })
+           .done(res=>{
+               Swal.fire(
+                 'Bildirim',
+                 res.Message,
+                res.IsSuccsss ?  'success' : 'error'
+               )
+               if(res.IsSuccsss){
+                    $('#lookupUser').val('');
+                     $('#selectedDate').val('');
+                       $('#meetFormModal').modal('hide');
+               }
+           })
+       })
 
-    $("#btnCalendaerAdd").click(e=>{
-        $('#meetFormModal').modal('show');
-    })
-
-    $(".saveMeet").click(e=>{
-        $.post("/Meet/Add",{
-          CustomerID:  $('#lookupUser').val(),
-          SelectedDate: $('#selectedDate').val()
-        })
-        .done(res=>{
-            Swal.fire(
-              'Bildirim',
-              res.Message,
-             res.IsSuccsss ?  'success' : 'error'
-            )
-            if(res.IsSuccsss){
-                 $('#lookupUser').val('');
-                  $('#selectedDate').val('');
-                    $('#meetFormModal').modal('hide');
-            }
-        })
-    })
-
-    $(".closeModal").click(e=>{
-        $('#meetFormModal').modal('hide');
-    })
+       $(".closeModal").click(e=>{
+           $('#meetFormModal').modal('hide');
+       })
 
 </script>
