@@ -45,7 +45,7 @@ namespace Web.Controllers
             HomeViewData viewData = new HomeViewData();
 
             List<DietitianViewData> dietitansViewData = dietitianOperations.GetAllDietitians(city, minPrice, maxPrice, stars);
-            viewData.DietitianView = dietitansViewData;
+            viewData.DietitianView = dietitansViewData==null ? new List<DietitianViewData>() : dietitansViewData;
 
             viewData.Sliders.Add(new Slider() { ImageUrl = "https://media-cldnry.s-nbcnews.com/image/upload/newscms/2019_51/1406125/fruits-veggies-today-main-190130.jpg" });
             viewData.Sliders.Add(new Slider() { ImageUrl = "https://www.sgeyazilim.com/yonetimpaneli/resimler1/1024___202131714175165___diettime1_png.png" });

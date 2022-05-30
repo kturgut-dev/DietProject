@@ -125,7 +125,7 @@ namespace Web.Controllers
                 row.FullName = _userOperations.Get(x=>x.ID == msg.SendedUserID).FullName;
                 row.LastMessage = msg.MessageText;
                 row.LastMessageDate = msg.MessageDate < DateTime.Today ? msg.MessageDate.ToString("dd MM hh:mm") : msg.MessageDate.ToString("hh:mm");
-                row.IsLeft = true;
+                row.IsLeft = false;
 
                 await _chatHub.Clients.All.SendAsync("receiveMessage", row);
                 //await _chatHub.Clients.User(Chat.AcitveUsers.First(x => x.UserID == msgData.UserID.ToString()).ConID).SendAsync("receiveMessage", ClaimHelper.UserID, msgData.Message);

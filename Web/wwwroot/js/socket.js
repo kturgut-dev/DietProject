@@ -122,7 +122,7 @@ function clickUserShowMessages(id) {
         .then(res => {
             currentMsgList = res.data.messages;
             fillMessges();
-            $('#userFullName').text(res.data.userData.fullName);
+            $('#userFullNameTxt').text(res.data.userData.fullName);
         })
         .catch(err => {
             console.error(err);
