@@ -114,6 +114,7 @@ namespace Web.Controllers
                     newRow.StartDate = item.SelectedDate;
                     newRow.EndDate = item.SelectedDate;
                     newRow.Text = text;
+                    newRow.Name = _userOperations.Get(x => x.ID == item.CustomerID).FullName;
                     newRow.AllDay = true;
                     res.Calender.Add(newRow);
                 }

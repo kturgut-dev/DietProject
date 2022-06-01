@@ -23,6 +23,9 @@ namespace Web.Models
         public string Id { get; set; }
         [Newtonsoft.Json.JsonProperty("description")]
         public string Text { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("name")]
+        public string Name { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public string date { get { return StartDate.ToString("MM-dd-yyyy"); }  }
