@@ -8,6 +8,7 @@
       <Content Remove="Views\Shared\Error.cshtml" />
       <Content Remove="Views\_ViewImports.cshtml" />
       <Content Remove="Views\_ViewStart.cshtml" />
+      <Content Remove="wwwroot\manifest\manifest - Copy.webmanifest" />
     </ItemGroup>
 
     <ItemGroup>
@@ -27,6 +28,8 @@
       <None Include="wwwroot\evo-calendar\js\evo-calendar.min.js" />
       <None Include="wwwroot\js\jquery-template\dist\jquery.loadTemplate.js" />
       <None Include="wwwroot\js\jquery-template\dist\jquery.loadTemplate.min.js" />
+      <None Include="wwwroot\manifest\manifest - Copy.webmanifest" />
+      <None Include="wwwroot\manifest\manifest.webmanifest" />
     </ItemGroup>
 
     <ItemGroup>
