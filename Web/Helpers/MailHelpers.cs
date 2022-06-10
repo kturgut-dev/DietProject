@@ -16,16 +16,16 @@ namespace Web.Helpers
             {
                 SmtpClient smtp = new SmtpClient
                 {
-                    Host = "smtp.gmail.com",
-                    UseDefaultCredentials = false,
+                    Host = "smtp.yandex.com",
+                    //UseDefaultCredentials = true,
                     EnableSsl = true,
-                    Port = 587,
-                    Credentials = new NetworkCredential("dietproject.98@gmail.com", "DietProject123")
+                    Port = 465,
+                    Credentials = new NetworkCredential("dietproject@yandex.com", "DietProject123")
                 };
 
                 Email.DefaultSender = new SmtpSender(smtp);
                 var email = Email
-                    .From("dietproject.98@gmail.com", "Diet Projesi")
+                    .From("dietproject.98@yandex.com", "Diet Projesi")
                     .To(toMailAddress)
                     .Subject(title)
                     .Body(bodyContent, true);

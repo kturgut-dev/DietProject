@@ -200,7 +200,7 @@
                                 </div>
                                 <div class="card-body d-flex align-items-center flex-column flex-md-row">
                                     <a href="product-detail.html">
-                                        <img class="w120 rounded img-fluid" src="~/assets/images/profile_av.svg" alt="">
+                                        <img class="w120 rounded img-fluid rounded-circle mr-2" style="" src="@(!string.IsNullOrEmpty(dietitianData.ProfileImage) ? dietitianData.ProfileImage: "~/assets/images/profile_av.svg")" alt="">
                                     </a>
                                     <div class="ms-md-4 m-0 mt-4 mt-md-0 text-md-start w-100">
                                         <div class="row">
